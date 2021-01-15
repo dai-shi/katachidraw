@@ -1,0 +1,6 @@
+*~
+*.swp
+node_modules
+.eslintcache
+/dist
+/build
