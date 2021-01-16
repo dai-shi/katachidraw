@@ -28,15 +28,26 @@ const dragCanvasStartAtom = atom<{
 
 export const dragCanvasAtom = atom(
   null,
-  (get, set, pos: readonly [number, number] | "end") => {
+  (
+    get,
+    set,
+    action:
+      | {
+          type: "start" | "move";
+          pos: readonly [number, number];
+        }
+      | {
+          type: "end";
+        }
+  ) => {
     const mode = get(modeAtom);
 
     // pen mode
     if (mode === "pen") {
-      if (pos === "end") {
+      if (action.type === "end") {
         set(commitDotsAtom, null);
       } else {
-        set(addDotAtom, pos);
+        set(addDotAtom, action.pos);
       }
       return;
     }
@@ -47,19 +58,27 @@ export const dragCanvasAtom = atom(
 
     // hand mode with selection
     if (mode === "hand" && selected.size) {
-      if (pos === "end") {
-        if (dragStart && !dragStart.dragged && !dragStart.hasPressingShape) {
-          set(clearSelectionAtom, null);
-        }
-        set(dragCanvasStartAtom, null);
-      } else if (dragStart) {
+      if (action.type === "start" && !dragStart) {
+        const shapeMap: ShapeMap = new Map();
+        selected.forEach((shapeAtom) => {
+          const shape = get(shapeAtom);
+          shapeMap.set(shapeAtom, {
+            x: shape.x - action.pos[0] / zoom,
+            y: shape.y - action.pos[1] / zoom,
+          });
+        });
+        set(dragCanvasStartAtom, {
+          shapeMap,
+          hasPressingShape: !!get(pressingShapeAtom),
+        });
+      } else if (action.type === "move" && dragStart) {
         selected.forEach((shapeAtom) => {
           const item = dragStart.shapeMap?.get(shapeAtom);
           if (item) {
             set(shapeAtom, (prev) => ({
               ...prev,
-              x: item.x + pos[0] / zoom,
-              y: item.y + pos[1] / zoom,
+              x: item.x + action.pos[0] / zoom,
+              y: item.y + action.pos[1] / zoom,
             }));
           }
         });
@@ -67,19 +86,11 @@ export const dragCanvasAtom = atom(
           ...dragStart,
           dragged: true,
         });
-      } else {
-        const shapeMap: ShapeMap = new Map();
-        selected.forEach((shapeAtom) => {
-          const shape = get(shapeAtom);
-          shapeMap.set(shapeAtom, {
-            x: shape.x - pos[0] / zoom,
-            y: shape.y - pos[1] / zoom,
-          });
-        });
-        set(dragCanvasStartAtom, {
-          shapeMap,
-          hasPressingShape: !!get(pressingShapeAtom),
-        });
+      } else if (action.type === "end" && dragStart) {
+        if (!dragStart.dragged && !dragStart.hasPressingShape) {
+          set(clearSelectionAtom, null);
+        }
+        set(dragCanvasStartAtom, null);
       }
       return;
     }
@@ -87,23 +98,23 @@ export const dragCanvasAtom = atom(
     // hand mode without selection
     if (mode === "hand" && !selected.size) {
       const offset = get(offsetAtom);
-      if (pos === "end") {
-        set(dragCanvasStartAtom, null);
-      } else if (dragStart) {
+      if (action.type === "start" && !dragStart) {
+        set(dragCanvasStartAtom, {
+          canvas: {
+            x: offset.x + action.pos[0] / zoom,
+            y: offset.y + action.pos[1] / zoom,
+          },
+        });
+      } else if (action.type === "move" && dragStart) {
         const { canvas } = dragStart;
         if (canvas) {
           set(offsetAtom, {
-            x: canvas.x - pos[0] / zoom,
-            y: canvas.y - pos[1] / zoom,
+            x: canvas.x - action.pos[0] / zoom,
+            y: canvas.y - action.pos[1] / zoom,
           });
         }
-      } else {
-        set(dragCanvasStartAtom, {
-          canvas: {
-            x: offset.x + pos[0] / zoom,
-            y: offset.y + pos[1] / zoom,
-          },
-        });
+      } else if (action.type === "end" && dragStart) {
+        set(dragCanvasStartAtom, null);
       }
       return;
     }

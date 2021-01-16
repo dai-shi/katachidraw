@@ -40,18 +40,20 @@ export const Canvas: FC<Props> = ({
       onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
       onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
       onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onPanResponderTerminationRequest: (_evt, _gestureState) => true,
       onPanResponderGrant: (_evt, gestureState) => {
-        drag([gestureState.x0, gestureState.y0]);
+        drag({
+          type: "start",
+          pos: [gestureState.x0, gestureState.y0],
+        });
       },
       onPanResponderMove: (_evt, gestureState) => {
-        drag([gestureState.moveX, gestureState.moveY]);
+        drag({
+          type: "move",
+          pos: [gestureState.moveX, gestureState.moveY],
+        });
       },
       onPanResponderRelease: (_evt, _gestureState) => {
-        drag("end");
-      },
-      onPanResponderTerminate: (_evt, _gestureState) => {
-        drag("end");
+        drag({ type: "end" });
       },
     })
   ).current;
