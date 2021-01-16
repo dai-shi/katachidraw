@@ -2,7 +2,7 @@
 
 SVG based drawing tool and react-native component
 
-Katachi means "shape" in Japanese.
+Katachidraw means like "Let's make shapes" in Japanese.
 
 ---
 This is still a secret project.

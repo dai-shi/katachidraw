@@ -24,7 +24,10 @@ const dragCanvasStartAtom = atom<{
   shapeMap?: ShapeMap;
   dragged?: boolean;
   hasPressingShape?: boolean;
-  startTime?: number;
+} | null>(null);
+
+const dragCanvasEndAtom = atom<{
+  endTime?: number;
 } | null>(null);
 
 export const dragCanvasAtom = atom(
@@ -59,7 +62,12 @@ export const dragCanvasAtom = atom(
 
     // hand mode with selection
     if (mode === "hand" && selected.size) {
-      if (action.type === "start" && !dragStart) {
+      if (
+        action.type === "start" &&
+        !dragStart &&
+        // XXX Mobile Safari accidentally triggers another event very quickly?
+        performance.now() - (get(dragCanvasEndAtom)?.endTime ?? 0) > 99
+      ) {
         const shapeMap: ShapeMap = new Map();
         selected.forEach((shapeAtom) => {
           const shape = get(shapeAtom);
@@ -71,7 +79,6 @@ export const dragCanvasAtom = atom(
         set(dragCanvasStartAtom, {
           shapeMap,
           hasPressingShape: !!get(pressingShapeAtom),
-          startTime: performance.now(),
         });
       } else if (action.type === "move" && dragStart) {
         selected.forEach((shapeAtom) => {
@@ -89,15 +96,11 @@ export const dragCanvasAtom = atom(
           dragged: true,
         });
       } else if (action.type === "end" && dragStart) {
-        if (
-          !dragStart.dragged &&
-          !dragStart.hasPressingShape &&
-          // XXX Mobile Safari accidentally triggers another event very quickly?
-          performance.now() - (dragStart?.startTime ?? 0) > 20
-        ) {
+        if (!dragStart.dragged && !dragStart.hasPressingShape) {
           set(clearSelectionAtom, null);
         }
         set(dragCanvasStartAtom, null);
+        set(dragCanvasEndAtom, { endTime: performance.now() });
       }
       return;
     }
@@ -125,6 +128,16 @@ export const dragCanvasAtom = atom(
       }
       return;
     }
+
+    // erase mode without selection
+    if (mode === "erase" && !selected.size) {
+      if (action.type === "start" && !dragStart) {
+        set(dragCanvasStartAtom, {});
+      } else if (action.type === "end" && dragStart) {
+        set(dragCanvasStartAtom, null);
+      }
+      return;
+    }
   }
 );
 
@@ -133,7 +146,10 @@ export const dragShapeAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
 
   // erase mode
   if (mode === "erase") {
-    set(deleteShapeAtom, shapeAtom);
+    const dragStart = get(dragCanvasStartAtom);
+    if (dragStart) {
+      set(deleteShapeAtom, shapeAtom);
+    }
     return;
   }
 });
