@@ -3,7 +3,7 @@ import { curveToBezier } from "points-on-curve/lib/curve-to-bezier.js";
 import { pointsOnBezierCurves } from "points-on-curve";
 
 import { offsetAtom, zoomAtom } from "./canvas";
-import { shapeAtomListAtom, createShapeAtom } from "./shapes";
+import { addShapeAtom } from "./shapes";
 
 export const dotsAtom = atom<[number, number][]>([]);
 
@@ -33,7 +33,7 @@ export const commitDotsAtom = atom(null, (get, set) => {
       path += `${bcurve[i + 2][0]} ${bcurve[i + 2][1]}`;
       i += 3;
     }
-    set(shapeAtomListAtom, [...get(shapeAtomListAtom), createShapeAtom(path)]);
+    set(addShapeAtom, path);
   }
   set(dotsAtom, []);
 });

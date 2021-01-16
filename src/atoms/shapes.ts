@@ -10,35 +10,45 @@ export type ShapeAtom = PrimitiveAtom<{
   selected?: boolean;
 }>;
 
-export const createShapeAtom = (path: string): ShapeAtom => {
+export const allShapesAtom = atom<ShapeAtom[]>([]);
+
+export const addShapeAtom = atom(null, (get, set, path: string) => {
   const shapeAtom = atom({ path, color: "black", x: 0, y: 0 });
-  return shapeAtom;
-};
+  set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
+});
 
-const shapeAtomSelectedAtom = atom<ShapeAtom | null>(null);
+const selectedShapesAtom = atom(new Set<ShapeAtom>());
 
-export const selectedAtom = atom((get) => get(shapeAtomSelectedAtom));
+export const selectedAtom = atom((get) => get(selectedShapesAtom));
 
-export const selectAtom = atom(
-  null,
-  (get, set, shapeAtom: ShapeAtom | null) => {
-    const mode = get(modeAtom);
-    const selectedAtom = get(shapeAtomSelectedAtom);
-    if (shapeAtom === null) {
-      if (selectedAtom) {
-        set(selectedAtom, (prev) => ({ ...prev, selected: false }));
-        set(shapeAtomSelectedAtom, null);
-      }
-    } else if (mode === "select") {
-      if (selectedAtom !== shapeAtom) {
-        if (selectedAtom) {
-          set(selectedAtom, (prev) => ({ ...prev, selected: false }));
-        }
-        set(shapeAtom, (prev) => ({ ...prev, selected: true }));
-        set(shapeAtomSelectedAtom, shapeAtom);
-      }
-    }
+export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
+  const mode = get(modeAtom);
+  if (mode === "pen") {
+    return;
   }
-);
+  const selected = get(selectedShapesAtom);
+  if (!selected.has(shapeAtom)) {
+    set(shapeAtom, (prev) => ({ ...prev, selected: true }));
+    set(selectedShapesAtom, new Set(selected).add(shapeAtom));
+  }
+});
 
-export const shapeAtomListAtom = atom<ShapeAtom[]>([]);
+export const unselectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
+  const selected = get(selectedShapesAtom);
+  if (selected.has(shapeAtom)) {
+    set(shapeAtom, (prev) => ({ ...prev, selected: false }));
+    const nextSelected = new Set(selected);
+    nextSelected.delete(shapeAtom);
+    set(selectedShapesAtom, nextSelected);
+  }
+});
+
+export const clearSelectionAtom = atom(null, (get, set) => {
+  const selected = get(selectedShapesAtom);
+  selected.forEach((shapeAtom) => {
+    if (get(shapeAtom).selected) {
+      set(shapeAtom, (prev) => ({ ...prev, selected: false }));
+    }
+  });
+  set(selectedShapesAtom, new Set());
+});

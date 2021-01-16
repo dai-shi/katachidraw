@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 
 import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
-import { shapeAtomListAtom, selectedAtom, selectAtom } from "./shapes";
+import { selectedAtom, clearSelectionAtom } from "./shapes";
 
 export const toolbarAtom = atom(
   (get) => {
@@ -9,26 +9,30 @@ export const toolbarAtom = atom(
     const selected = get(selectedAtom);
     return [
       {
+        id: "hand",
+        active: mode === "hand",
+      },
+      {
         id: "pen",
         active: mode === "pen",
       },
       {
-        id: "select",
-        active: mode === "select",
+        id: "erase",
+        active: mode === "erase",
       },
+      ...(selected ? [{ id: "palette" }] : []),
       {
         id: "zoomIn",
       },
       {
         id: "zoomOut",
       },
-      ...(selected ? [{ id: "palette" }, { id: "delete" }] : []),
     ];
   },
   (get, set, id) => {
-    if (id === "pen" || id === "select") {
+    if (id === "hand" || id === "pen" || id === "erase") {
       set(modeAtom, id);
-      set(selectAtom, null);
+      set(clearSelectionAtom, null);
     } else if (id === "zoomIn" || id === "zoomOut") {
       const dimension = get(dimensionAtom);
       const zoom = get(zoomAtom);
@@ -40,8 +44,8 @@ export const toolbarAtom = atom(
       }));
     } else if (id === "palette") {
       const selected = get(selectedAtom);
-      if (selected) {
-        set(selected, (prev) => ({
+      selected.forEach((shapeAtom) => {
+        set(shapeAtom, (prev) => ({
           ...prev,
           color:
             prev.color === "black"
@@ -52,13 +56,7 @@ export const toolbarAtom = atom(
               ? "red"
               : "black",
         }));
-      }
-    } else if (id === "delete") {
-      const selected = get(selectedAtom);
-      set(selectAtom, null);
-      set(shapeAtomListAtom, (prev) =>
-        prev.filter((item) => item !== selected)
-      );
+      });
     }
   }
 );

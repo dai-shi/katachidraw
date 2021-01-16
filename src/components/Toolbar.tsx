@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { toolbarAtom } from "../atoms/toolbar";
 import { hackTouchableNodePress } from "../utils/touchHandlerHack";
 import PenIcon from "../icons/Pen";
-import SelectIcon from "../icons/Select";
+import HandIcon from "../icons/Hand";
 import ZoomInIcon from "../icons/ZoomIn";
 import ZoomOutIcon from "../icons/ZoomOut";
 import PaletteIcon from "../icons/Palette";
@@ -13,11 +13,11 @@ import DeleteIcon from "../icons/Delete";
 
 const icons: Record<string, ReactElement> = {
   pen: <PenIcon />,
-  select: <SelectIcon />,
+  hand: <HandIcon />,
   zoomIn: <ZoomInIcon />,
   zoomOut: <ZoomOutIcon />,
   palette: <PaletteIcon />,
-  delete: <DeleteIcon />,
+  erase: <DeleteIcon />,
 };
 
 const left = 0;

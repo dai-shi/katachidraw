@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const modeAtom = atom<"pen" | "select">("pen");
+export const modeAtom = atom<"hand" | "pen" | "erase">("pen");
 
 export const dimensionAtom = atom({ width: 0, height: 0 });
 
