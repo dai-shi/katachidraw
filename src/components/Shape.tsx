@@ -4,7 +4,7 @@ import { G, Path } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { ShapeAtom, selectAtom } from "../atoms/shapes";
-import { dragShapeAtom } from "../atoms/drag";
+import { setPressingShapeAtom, dragShapeAtom } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 export const SvgShape: FC<{
@@ -12,6 +12,7 @@ export const SvgShape: FC<{
 }> = ({ shapeAtom }) => {
   const [shape] = useAtom(shapeAtom);
   const [, select] = useAtom(selectAtom);
+  const [, setPressingShape] = useAtom(setPressingShapeAtom);
   const [, dragShape] = useAtom(dragShapeAtom);
 
   const panResponder = useRef(
@@ -31,12 +32,24 @@ export const SvgShape: FC<{
     <G
       transform={`translate(${shape.x} ${shape.y})`}
       {...panResponder.panHandlers}
-      onPressOut={() => {
+      onPress={() => {
         select(shapeAtom);
       }}
+      onPressIn={() => {
+        setPressingShape(shapeAtom);
+      }}
+      onPressOut={() => {
+        setPressingShape(null);
+      }}
       ref={hackTouchableNode({
-        onPressOut: () => {
+        onPress: () => {
           select(shapeAtom);
+        },
+        onPressIn: () => {
+          setPressingShape(shapeAtom);
+        },
+        onPressOut: () => {
+          setPressingShape(null);
         },
         onDrag: () => {
           dragShape(shapeAtom);

@@ -9,12 +9,21 @@ import {
   deleteShapeAtom,
 } from "./shapes";
 
+const pressingShapeAtom = atom<ShapeAtom | null>(null);
+export const setPressingShapeAtom = atom(
+  null,
+  (_get, set, shapeAtom: ShapeAtom | null) => {
+    set(pressingShapeAtom, shapeAtom);
+  }
+);
+
 type ShapeMap = Map<object, { x: number; y: number }>;
 
 const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
   dragged?: boolean;
+  hasPressingShape?: boolean;
 } | null>(null);
 
 export const dragCanvasAtom = atom(
@@ -39,10 +48,7 @@ export const dragCanvasAtom = atom(
     // hand mode with selection
     if (mode === "hand" && selected.size) {
       if (pos === "end") {
-        if (
-          !dragStart?.dragged &&
-          dragStart?.shapeMap?.size === selected.size
-        ) {
+        if (dragStart && !dragStart.dragged && !dragStart.hasPressingShape) {
           set(clearSelectionAtom, null);
         }
         set(dragCanvasStartAtom, null);
@@ -70,7 +76,10 @@ export const dragCanvasAtom = atom(
             y: shape.y - pos[1] / zoom,
           });
         });
-        set(dragCanvasStartAtom, { shapeMap });
+        set(dragCanvasStartAtom, {
+          shapeMap,
+          hasPressingShape: !!get(pressingShapeAtom),
+        });
       }
       return;
     }
