@@ -24,6 +24,7 @@ const dragCanvasStartAtom = atom<{
   shapeMap?: ShapeMap;
   dragged?: boolean;
   hasPressingShape?: boolean;
+  startTime?: number;
 } | null>(null);
 
 export const dragCanvasAtom = atom(
@@ -70,6 +71,7 @@ export const dragCanvasAtom = atom(
         set(dragCanvasStartAtom, {
           shapeMap,
           hasPressingShape: !!get(pressingShapeAtom),
+          startTime: performance.now(),
         });
       } else if (action.type === "move" && dragStart) {
         selected.forEach((shapeAtom) => {
@@ -87,7 +89,12 @@ export const dragCanvasAtom = atom(
           dragged: true,
         });
       } else if (action.type === "end" && dragStart) {
-        if (!dragStart.dragged && !dragStart.hasPressingShape) {
+        if (
+          !dragStart.dragged &&
+          !dragStart.hasPressingShape &&
+          // XXX Mobile Safari accidentally triggers another event very quickly?
+          performance.now() - (dragStart?.startTime ?? 0) > 20
+        ) {
           set(clearSelectionAtom, null);
         }
         set(dragCanvasStartAtom, null);
