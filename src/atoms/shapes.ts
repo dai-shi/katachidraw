@@ -27,7 +27,13 @@ export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
     return;
   }
   const selected = get(selectedShapesAtom);
-  if (!selected.has(shapeAtom)) {
+  if (selected.has(shapeAtom)) {
+    if (mode === "erase") {
+      set(deleteShapeAtom, shapeAtom);
+    } else {
+      set(unselectAtom, shapeAtom);
+    }
+  } else {
     set(shapeAtom, (prev) => ({ ...prev, selected: true }));
     set(selectedShapesAtom, new Set(selected).add(shapeAtom));
   }
@@ -51,4 +57,9 @@ export const clearSelectionAtom = atom(null, (get, set) => {
     }
   });
   set(selectedShapesAtom, new Set());
+});
+
+export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
+  set(unselectAtom, shapeAtom);
+  set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
 });

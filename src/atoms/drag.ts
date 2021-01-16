@@ -2,17 +2,22 @@ import { atom } from "jotai";
 
 import { modeAtom, offsetAtom, zoomAtom } from "./canvas";
 import { addDotAtom, commitDotsAtom } from "./dots";
-import { selectedAtom, clearSelectionAtom } from "./shapes";
+import {
+  ShapeAtom,
+  selectedAtom,
+  clearSelectionAtom,
+  deleteShapeAtom,
+} from "./shapes";
 
 type ShapeMap = Map<object, { x: number; y: number }>;
 
-const dragStartAtom = atom<{
+const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
   dragged?: boolean;
 } | null>(null);
 
-export const dragAtom = atom(
+export const dragCanvasAtom = atom(
   null,
   (get, set, pos: readonly [number, number] | "end") => {
     const mode = get(modeAtom);
@@ -29,15 +34,18 @@ export const dragAtom = atom(
 
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
-    const dragStart = get(dragStartAtom);
+    const dragStart = get(dragCanvasStartAtom);
 
     // hand mode with selection
     if (mode === "hand" && selected.size) {
       if (pos === "end") {
-        if (!dragStart?.dragged) {
+        if (
+          !dragStart?.dragged &&
+          dragStart?.shapeMap?.size === selected.size
+        ) {
           set(clearSelectionAtom, null);
         }
-        set(dragStartAtom, null);
+        set(dragCanvasStartAtom, null);
       } else if (dragStart) {
         selected.forEach((shapeAtom) => {
           const item = dragStart.shapeMap?.get(shapeAtom);
@@ -49,7 +57,7 @@ export const dragAtom = atom(
             }));
           }
         });
-        set(dragStartAtom, {
+        set(dragCanvasStartAtom, {
           ...dragStart,
           dragged: true,
         });
@@ -62,7 +70,7 @@ export const dragAtom = atom(
             y: shape.y - pos[1] / zoom,
           });
         });
-        set(dragStartAtom, { shapeMap });
+        set(dragCanvasStartAtom, { shapeMap });
       }
       return;
     }
@@ -71,7 +79,7 @@ export const dragAtom = atom(
     if (mode === "hand" && !selected.size) {
       const offset = get(offsetAtom);
       if (pos === "end") {
-        set(dragStartAtom, null);
+        set(dragCanvasStartAtom, null);
       } else if (dragStart) {
         const { canvas } = dragStart;
         if (canvas) {
@@ -81,7 +89,7 @@ export const dragAtom = atom(
           });
         }
       } else {
-        set(dragStartAtom, {
+        set(dragCanvasStartAtom, {
           canvas: {
             x: offset.x + pos[0] / zoom,
             y: offset.y + pos[1] / zoom,
@@ -92,3 +100,13 @@ export const dragAtom = atom(
     }
   }
 );
+
+export const dragShapeAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
+  const mode = get(modeAtom);
+
+  // erase mode
+  if (mode === "erase") {
+    set(deleteShapeAtom, shapeAtom);
+    return;
+  }
+});

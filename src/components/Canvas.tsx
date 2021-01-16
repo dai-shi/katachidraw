@@ -4,11 +4,11 @@ import Svg, { G } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { dimensionAtom, offsetAtom, zoomAtom } from "../atoms/canvas";
-import { dragAtom } from "../atoms/drag";
+import { dragCanvasAtom } from "../atoms/drag";
 import Shapes from "./Shapes";
 import Dots from "./Dots";
 import Toolbar from "./Toolbar";
-import { hackTouchableNodeAll } from "../utils/touchHandlerHack";
+import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 type Props = {
   width: number;
@@ -32,14 +32,14 @@ export const Canvas: FC<Props> = ({
 
   const [offset] = useAtom(offsetAtom);
   const [zoom] = useAtom(zoomAtom);
-  const [, drag] = useAtom(dragAtom);
+  const [, drag] = useAtom(dragCanvasAtom);
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: (_evt, _gestureState) => true,
-      onStartShouldSetPanResponderCapture: (_evt, _gestureState) => true,
+      onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
       onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
       onPanResponderTerminationRequest: (_evt, _gestureState) => true,
       onPanResponderGrant: (_evt, gestureState) => {
         drag([gestureState.x0, gestureState.y0]);
@@ -66,14 +66,12 @@ export const Canvas: FC<Props> = ({
           transform={`translate(${offset.x + 10 / zoom} ${
             offset.y + 10 / zoom
           }) scale(${1 / zoom})`}
-          onPressIn={(e) => {
-            // doesn't seem to work?
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          ref={hackTouchableNodeAll((e: any) => {
-            e.preventDefault();
-            e.stopPropagation();
+          onStartShouldSetResponder={() => false}
+          ref={hackTouchableNode({
+            onPressIn: (e: any) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
           })}
         >
           {ToolbarElement}

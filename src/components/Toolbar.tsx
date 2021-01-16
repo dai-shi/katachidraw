@@ -3,7 +3,7 @@ import { G, Rect } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { toolbarAtom } from "../atoms/toolbar";
-import { hackTouchableNodePress } from "../utils/touchHandlerHack";
+import { hackTouchableNode } from "../utils/touchHandlerHack";
 import PenIcon from "../icons/Pen";
 import HandIcon from "../icons/Hand";
 import ZoomInIcon from "../icons/ZoomIn";
@@ -43,15 +43,13 @@ export const SvgToolbar: FC = () => {
       {tools.map((tool, i) => (
         <G
           key={tool.id}
-          onPress={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+          onPress={() => {
             dispatch(tool.id);
           }}
-          ref={hackTouchableNodePress((e: any) => {
-            e.preventDefault();
-            e.stopPropagation();
-            dispatch(tool.id);
+          ref={hackTouchableNode({
+            onPress: () => {
+              dispatch(tool.id);
+            },
           })}
         >
           <Rect
