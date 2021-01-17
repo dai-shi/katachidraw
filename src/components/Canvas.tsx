@@ -40,7 +40,7 @@ export const Canvas: FC<Props> = ({
     PanResponder.create({
       onStartShouldSetPanResponder: (_evt, _gestureState) => true,
       onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
+      onMoveShouldSetPanResponder: (_evt, _gestureState) => false,
       onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
       onPanResponderGrant: (_evt, gestureState) => {
         drag({
@@ -70,7 +70,10 @@ export const Canvas: FC<Props> = ({
           transform={`translate(${offset.x + toolbarPosition[0] / zoom} ${
             offset.y + toolbarPosition[1] / zoom
           }) scale(${1 / zoom})`}
-          onStartShouldSetResponder={() => false}
+          onPressIn={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
           ref={hackTouchableNode({
             onPressIn: (e: any) => {
               e.preventDefault();
