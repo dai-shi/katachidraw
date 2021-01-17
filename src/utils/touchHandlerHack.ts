@@ -17,7 +17,6 @@ export const hackTouchableNode = (instance: any) => {
     const onDown = (e: any) => {
       if (emulateResponder) {
         props.onResponderGrant?.(hackEvent(e));
-        return;
       }
       props.onPressIn?.(hackEvent(e));
       pressStart = true;
@@ -25,14 +24,12 @@ export const hackTouchableNode = (instance: any) => {
     const onMove = (e: any) => {
       if (emulateResponder) {
         props.onResponderMove?.(hackEvent(e));
-        return;
       }
       pressStart = false;
     };
     const onUp = () => {
       if (emulateResponder) {
         props.onResponderEnd?.();
-        return;
       }
       props.onPressOut?.();
       if (pressStart) {
