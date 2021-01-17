@@ -1,5 +1,4 @@
-import { FC, ReactElement, useEffect, useMemo } from "react";
-import { PanResponder } from "react-native";
+import { FC, ReactElement, useEffect } from "react";
 import Svg, { Rect, G } from "react-native-svg";
 import { useAtom } from "jotai";
 
@@ -36,36 +35,27 @@ export const Canvas: FC<Props> = ({
   const [zoom] = useAtom(zoomAtom);
   const [, drag] = useAtom(dragCanvasAtom);
 
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: (_evt, _gestureState) => true,
-        onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-        onMoveShouldSetPanResponder: (_evt, _gestureState) => false,
-        onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-        onPanResponderGrant: (_evt, gestureState) => {
-          drag({
-            type: "start",
-            pos: [gestureState.x0, gestureState.y0],
-          });
-        },
-        onPanResponderMove: (_evt, gestureState) => {
-          drag({
-            type: "move",
-            pos: [gestureState.moveX, gestureState.moveY],
-          });
-        },
-        onPanResponderRelease: (_evt, _gestureState) => {
-          drag({ type: "end" });
-        },
-      }),
-    [drag]
-  );
-
   return (
     <Svg
       viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}
-      {...panResponder.panHandlers}
+      onStartShouldSetResponder={() => true}
+      onResponderGrant={(e) => {
+        const { locationX, locationY } = e.nativeEvent;
+        drag({
+          type: "start",
+          pos: [locationX, locationY],
+        });
+      }}
+      onResponderMove={(e) => {
+        const { locationX, locationY } = e.nativeEvent;
+        drag({
+          type: "move",
+          pos: [locationX, locationY],
+        });
+      }}
+      onResponderEnd={() => {
+        drag({ type: "end" });
+      }}
       ref={hackTouchableNode({
         onPressIn: (e: any) => {
           const { clientX, clientY } = e.touches ? e.touches[0] : e;
