@@ -56,25 +56,7 @@ export const Canvas: FC<Props> = ({
       onResponderEnd={() => {
         drag({ type: "end" });
       }}
-      ref={hackTouchableNode({
-        onPressIn: (e: any) => {
-          const { clientX, clientY } = e.touches ? e.touches[0] : e;
-          drag({
-            type: "start",
-            pos: [clientX, clientY],
-          });
-        },
-        onDrag: (e: any) => {
-          const { clientX, clientY } = e.touches ? e.touches[0] : e;
-          drag({
-            type: "move",
-            pos: [clientX, clientY],
-          });
-        },
-        onPressOut: () => {
-          drag({ type: "end" });
-        },
-      })}
+      ref={hackTouchableNode}
     >
       <Rect
         x={offset.x}
@@ -94,12 +76,7 @@ export const Canvas: FC<Props> = ({
           e.preventDefault();
           e.stopPropagation();
         }}
-        ref={hackTouchableNode({
-          onPressIn: (e: any) => {
-            e.preventDefault();
-            e.stopPropagation();
-          },
-        })}
+        ref={hackTouchableNode}
       >
         {ToolbarElement}
       </G>

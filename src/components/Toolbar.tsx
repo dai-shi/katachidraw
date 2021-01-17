@@ -46,11 +46,7 @@ export const SvgToolbar: FC = () => {
           onPress={() => {
             dispatch(tool.id);
           }}
-          ref={hackTouchableNode({
-            onPress: () => {
-              dispatch(tool.id);
-            },
-          })}
+          ref={hackTouchableNode}
         >
           <Rect
             x={left + margin}

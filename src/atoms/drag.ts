@@ -139,7 +139,11 @@ export const dragCanvasAtom = atom(
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {});
       } else if (action.type === "move" && dragStart) {
+        const pressing = get(pressingShapeAtom);
         get(allShapesAtom).forEach((shapeAtom) => {
+          if (shapeAtom === pressing) {
+            return;
+          }
           const isPointInShape = isPointInShapeMap.get(shapeAtom);
           if (isPointInShape && isPointInShape(action.pos)) {
             set(deleteShapeAtom, shapeAtom);
@@ -159,7 +163,7 @@ type IsPointInShape = (point: readonly [number, number]) => boolean;
 
 export const isPointInShapeMap = new WeakMap<ShapeAtom, IsPointInShape>();
 
-export const registerIsPointInShapeAtom = (
+export const registerIsPointInShape = (
   shapeAtom: ShapeAtom,
   isPointInShape: IsPointInShape
 ) => {

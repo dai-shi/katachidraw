@@ -1,17 +1,10 @@
 // https://github.com/react-native-svg/react-native-svg/issues/1483
 // onPress is not working on web, hacking...
-export const hackTouchableNode = ({
-  onPressIn,
-  onPressOut,
-  onPress,
-  onDrag,
-  init,
-}: any) => (ele: any) => {
-  const node = ele && ele._touchableNode;
-  if (node) {
-    if (init) {
-      init(node);
-    }
+export const hackTouchableNode = (instance: any) => {
+  const node = instance?._touchableNode;
+  const props = instance?.props;
+  if (node && props) {
+    const emulateResponder = props.onStartShouldSetResponder?.();
     let down = "mousedown";
     let move = "mousemove";
     let up = "mouseup";
@@ -22,23 +15,31 @@ export const hackTouchableNode = ({
     }
     let pressStart = false;
     const onDown = (e: any) => {
-      if (onPressIn) {
-        onPressIn(e);
+      if (emulateResponder) {
+        props.onResponderGrant?.(hackEvent(e));
+        return;
       }
+      props.onPressIn?.(hackEvent(e));
       pressStart = true;
     };
     const onMove = (e: any) => {
-      if (onDrag) {
-        onDrag(e);
+      if (emulateResponder) {
+        props.onResponderMove?.(hackEvent(e));
+        return;
       }
       pressStart = false;
     };
     const onUp = (e: any) => {
-      if (onPressOut) {
-        onPressOut(e);
+      if (emulateResponder) {
+        props.onResponderEnd?.(hackEvent(e));
+        return;
       }
-      if (pressStart && onPress) {
-        setTimeout(onPress, 0);
+      props.onPressOut?.(hackEvent(e));
+      if (pressStart) {
+        const { onPress } = props;
+        if (onPress) {
+          setTimeout(onPress, 0);
+        }
       }
       pressStart = false;
     };
@@ -52,4 +53,17 @@ export const hackTouchableNode = ({
     node._previousMoveHandler = onMove;
     node._previousUpHandler = onUp;
   }
+};
+
+const hackEvent = (e: any) => {
+  const { clientX, clientY } = e.touches ? e.touches[0] : e;
+  const nativeEvent = {
+    locationX: clientX,
+    locationY: clientY,
+  };
+  return {
+    nativeEvent,
+    preventDefault: () => e.preventDefault(),
+    stopPropagation: () => e.stopPropagation(),
+  };
 };
