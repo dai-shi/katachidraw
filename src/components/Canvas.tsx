@@ -13,6 +13,7 @@ import { hackTouchableNode } from "../utils/touchHandlerHack";
 type Props = {
   width: number;
   height: number;
+  toolbarPosition?: readonly [number, number];
   ShapesElement?: ReactElement;
   DotsElement?: ReactElement;
   ToolbarElement?: ReactElement;
@@ -21,6 +22,7 @@ type Props = {
 export const Canvas: FC<Props> = ({
   width,
   height,
+  toolbarPosition = [5, 50],
   ShapesElement = <Shapes />,
   DotsElement = <Dots />,
   ToolbarElement = <Toolbar />,
@@ -65,8 +67,8 @@ export const Canvas: FC<Props> = ({
         {DotsElement}
         <G
           id="toolbar"
-          transform={`translate(${offset.x + 10 / zoom} ${
-            offset.y + 10 / zoom
+          transform={`translate(${offset.x + toolbarPosition[0] / zoom} ${
+            offset.y + toolbarPosition[1] / zoom
           }) scale(${1 / zoom})`}
           onStartShouldSetResponder={() => false}
           ref={hackTouchableNode({
