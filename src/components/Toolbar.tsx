@@ -22,7 +22,7 @@ const icons: Record<string, ReactElement> = {
 
 const left = 0;
 const top = 0;
-const size = 30;
+const size = 36;
 const margin = 8;
 const radius = 6;
 
