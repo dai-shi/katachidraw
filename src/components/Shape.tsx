@@ -1,10 +1,12 @@
-import { FC, memo, useMemo } from "react";
-import { PanResponder } from "react-native";
+import { FC, memo } from "react";
 import { G, Path } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { ShapeAtom, selectAtom } from "../atoms/shapes";
-import { setPressingShapeAtom, dragShapeAtom } from "../atoms/drag";
+import {
+  setPressingShapeAtom,
+  registerIsPointInShapeAtom,
+} from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 export const SvgShape: FC<{
@@ -13,27 +15,10 @@ export const SvgShape: FC<{
   const [shape] = useAtom(shapeAtom);
   const [, select] = useAtom(selectAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
-  const [, dragShape] = useAtom(dragShapeAtom);
 
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: (_evt, _gestureState) => false,
-        onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-        onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
-        onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-        onPanResponderTerminationRequest: (_evt, _gestureState) => false,
-        onPanResponderMove: (_evt, _gestureState) => {
-          dragShape(shapeAtom);
-        },
-      }),
-    [dragShape, shapeAtom]
-  );
-
-  return (
+  const element = (
     <G
       transform={`translate(${shape.x} ${shape.y})`}
-      {...panResponder.panHandlers}
       onPress={() => {
         select(shapeAtom);
       }}
@@ -53,8 +38,12 @@ export const SvgShape: FC<{
         onPressOut: () => {
           setPressingShape(null);
         },
-        onDrag: () => {
-          dragShape(shapeAtom);
+        init: (node: any) => {
+          const isPointInShape = (pos: readonly [number, number]) => {
+            const ele = document.elementFromPoint(pos[0], pos[1]);
+            return ele === node || ele?.parentNode === node;
+          };
+          registerIsPointInShapeAtom(shapeAtom, isPointInShape);
         },
       })}
     >
@@ -68,6 +57,13 @@ export const SvgShape: FC<{
       <Path d={shape.path} fill="none" stroke={shape.color} strokeWidth="4" />
     </G>
   );
+  const { isPointInStroke } = element as any;
+  if (isPointInStroke) {
+    registerIsPointInShapeAtom(shapeAtom, ([x, y]: readonly [number, number]) =>
+      isPointInStroke({ x, y })
+    );
+  }
+  return element;
 };
 
 export default memo(SvgShape);

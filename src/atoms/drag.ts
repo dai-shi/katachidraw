@@ -5,6 +5,7 @@ import { addDotAtom, commitDotsAtom } from "./dots";
 import {
   ShapeAtom,
   selectedAtom,
+  allShapesAtom,
   clearSelectionAtom,
   deleteShapeAtom,
 } from "./shapes";
@@ -137,6 +138,13 @@ export const dragCanvasAtom = atom(
     if (mode === "erase" && !selected.size) {
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {});
+      } else if (action.type === "move" && dragStart) {
+        get(allShapesAtom).forEach((shapeAtom) => {
+          const isPointInShape = isPointInShapeMap.get(shapeAtom);
+          if (isPointInShape && isPointInShape(action.pos)) {
+            set(deleteShapeAtom, shapeAtom);
+          }
+        });
       } else if (action.type === "end" && dragStart) {
         set(dragCanvasStartAtom, null);
       }
@@ -145,15 +153,15 @@ export const dragCanvasAtom = atom(
   }
 );
 
-export const dragShapeAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
-  const mode = get(modeAtom);
+// XXX this is very hacky, hope to improve it
 
-  // erase mode
-  if (mode === "erase") {
-    const dragStart = get(dragCanvasStartAtom);
-    if (dragStart) {
-      set(deleteShapeAtom, shapeAtom);
-    }
-    return;
-  }
-});
+type IsPointInShape = (point: readonly [number, number]) => boolean;
+
+export const isPointInShapeMap = new WeakMap<ShapeAtom, IsPointInShape>();
+
+export const registerIsPointInShapeAtom = (
+  shapeAtom: ShapeAtom,
+  isPointInShape: IsPointInShape
+) => {
+  isPointInShapeMap.set(shapeAtom, isPointInShape);
+};

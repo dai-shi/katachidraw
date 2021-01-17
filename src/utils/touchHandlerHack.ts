@@ -5,9 +5,13 @@ export const hackTouchableNode = ({
   onPressOut,
   onPress,
   onDrag,
+  init,
 }: any) => (ele: any) => {
   const node = ele && ele._touchableNode;
   if (node) {
+    if (init) {
+      init(node);
+    }
     let down = "mousedown";
     let move = "mousemove";
     let up = "mouseup";
