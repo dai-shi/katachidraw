@@ -29,12 +29,12 @@ export const hackTouchableNode = (instance: any) => {
       }
       pressStart = false;
     };
-    const onUp = (e: any) => {
+    const onUp = () => {
       if (emulateResponder) {
-        props.onResponderEnd?.(hackEvent(e));
+        props.onResponderEnd?.();
         return;
       }
-      props.onPressOut?.(hackEvent(e));
+      props.onPressOut?.();
       if (pressStart) {
         const { onPress } = props;
         if (onPress) {
