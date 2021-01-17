@@ -3,13 +3,19 @@ import { Platform } from "react-native";
 import { G, Path } from "react-native-svg";
 import { useAtom } from "jotai";
 
+import { modeAtom } from "../atoms/canvas";
 import { ShapeAtom, selectAtom } from "../atoms/shapes";
-import { setPressingShapeAtom, registerIsPointInShape } from "../atoms/drag";
+import {
+  setPressingShapeAtom,
+  IsPointInShape,
+  registerIsPointInShape,
+} from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 export const SvgShape: FC<{
   shapeAtom: ShapeAtom;
 }> = ({ shapeAtom }) => {
+  const [mode] = useAtom(modeAtom); // XXX this is very unfortunate (re-render all shapes)
   const [shape] = useAtom(shapeAtom);
   const [, select] = useAtom(selectAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
@@ -17,6 +23,7 @@ export const SvgShape: FC<{
   return (
     <G
       transform={`translate(${shape.x} ${shape.y})`}
+      onStartShouldSetResponder={() => mode !== "pen"}
       onPress={() => {
         select(shapeAtom);
       }}
@@ -28,7 +35,7 @@ export const SvgShape: FC<{
       }}
       ref={(instance: any) => {
         hackTouchableNode(instance);
-        let isPointInShape: (pos: readonly [number, number]) => boolean;
+        let isPointInShape: IsPointInShape;
         if (Platform.OS === "web") {
           const node = instance?._touchableNode;
           isPointInShape = (pos) => {
@@ -36,8 +43,14 @@ export const SvgShape: FC<{
             return !!node && (ele === node || ele?.parentNode === node);
           };
         } else {
-          isPointInShape = (pos) =>
-            !!instance?.isPointInStroke({ x: pos[0], y: pos[1] });
+          isPointInShape = (pos, offset, zoom) => {
+            const point = instance.ownerSVGElement.createSVGPoint();
+            point.x = offset.x + pos[0] / zoom;
+            point.y = offset.y + pos[1] / zoom;
+            // TODO isPointInStroke doesn't work
+            // x/y straight lines don't work
+            return instance.isPointInFill(point);
+          };
         }
         registerIsPointInShape(shapeAtom, isPointInShape);
       }}

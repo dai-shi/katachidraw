@@ -62,6 +62,7 @@ export const dragCanvasAtom = atom(
       return;
     }
 
+    const offset = get(offsetAtom);
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
 
@@ -112,7 +113,6 @@ export const dragCanvasAtom = atom(
 
     // hand mode without selection
     if (mode === "hand" && !selected.size) {
-      const offset = get(offsetAtom);
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {
           canvas: {
@@ -145,7 +145,7 @@ export const dragCanvasAtom = atom(
             return;
           }
           const isPointInShape = isPointInShapeMap.get(shapeAtom);
-          if (isPointInShape && isPointInShape(action.pos)) {
+          if (isPointInShape && isPointInShape(action.pos, offset, zoom)) {
             set(deleteShapeAtom, shapeAtom);
           }
         });
@@ -159,7 +159,11 @@ export const dragCanvasAtom = atom(
 
 // XXX this is very hacky, hope to improve it
 
-type IsPointInShape = (point: readonly [number, number]) => boolean;
+export type IsPointInShape = (
+  point: readonly [number, number],
+  offset: { x: number; y: number },
+  zoom: number
+) => boolean;
 
 export const isPointInShapeMap = new WeakMap<ShapeAtom, IsPointInShape>();
 
