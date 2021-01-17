@@ -45,20 +45,24 @@ export const dragCanvasAtom = atom(
         }
   ) => {
     const mode = get(modeAtom);
+    const dragStart = get(dragCanvasStartAtom);
 
     // pen mode
     if (mode === "pen") {
-      if (action.type === "end") {
-        set(commitDotsAtom, null);
-      } else {
+      if (action.type === "start" && !dragStart) {
+        set(dragCanvasStartAtom, {});
         set(addDotAtom, action.pos);
+      } else if (action.type === "move" && dragStart) {
+        set(addDotAtom, action.pos);
+      } else if (action.type === "end") {
+        set(dragCanvasStartAtom, null);
+        set(commitDotsAtom, null);
       }
       return;
     }
 
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
-    const dragStart = get(dragCanvasStartAtom);
 
     // hand mode with selection
     if (mode === "hand" && selected.size) {

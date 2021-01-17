@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect, useMemo } from "react";
-import { View, PanResponder } from "react-native";
-import Svg, { G } from "react-native-svg";
+import { PanResponder } from "react-native";
+import Svg, { Rect, G } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { dimensionAtom, offsetAtom, zoomAtom } from "../atoms/canvas";
@@ -63,30 +63,57 @@ export const Canvas: FC<Props> = ({
   );
 
   return (
-    <View {...panResponder.panHandlers}>
-      <Svg viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}>
-        {ShapesElement}
-        {DotsElement}
-        <G
-          id="toolbar"
-          transform={`translate(${offset.x + toolbarPosition[0] / zoom} ${
-            offset.y + toolbarPosition[1] / zoom
-          }) scale(${1 / zoom})`}
-          onPressIn={(e) => {
+    <Svg
+      viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}
+      {...panResponder.panHandlers}
+      ref={hackTouchableNode({
+        onPressIn: (e: any) => {
+          const { clientX, clientY } = e.touches ? e.touches[0] : e;
+          drag({
+            type: "start",
+            pos: [clientX, clientY],
+          });
+        },
+        onDrag: (e: any) => {
+          const { clientX, clientY } = e.touches ? e.touches[0] : e;
+          drag({
+            type: "move",
+            pos: [clientX, clientY],
+          });
+        },
+        onPressOut: () => {
+          drag({ type: "end" });
+        },
+      })}
+    >
+      <Rect
+        x={offset.x}
+        y={offset.y}
+        width={width / zoom}
+        height={height / zoom}
+        opacity="0"
+      />
+      {ShapesElement}
+      {DotsElement}
+      <G
+        id="toolbar"
+        transform={`translate(${offset.x + toolbarPosition[0] / zoom} ${
+          offset.y + toolbarPosition[1] / zoom
+        }) scale(${1 / zoom})`}
+        onPressIn={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        ref={hackTouchableNode({
+          onPressIn: (e: any) => {
             e.preventDefault();
             e.stopPropagation();
-          }}
-          ref={hackTouchableNode({
-            onPressIn: (e: any) => {
-              e.preventDefault();
-              e.stopPropagation();
-            },
-          })}
-        >
-          {ToolbarElement}
-        </G>
-      </Svg>
-    </View>
+          },
+        })}
+      >
+        {ToolbarElement}
+      </G>
+    </Svg>
   );
 };
 
