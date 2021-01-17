@@ -1,4 +1,4 @@
-import { FC, memo, useRef } from "react";
+import { FC, memo, useMemo } from "react";
 import { PanResponder } from "react-native";
 import { G, Path } from "react-native-svg";
 import { useAtom } from "jotai";
@@ -15,18 +15,20 @@ export const SvgShape: FC<{
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
   const [, dragShape] = useAtom(dragShapeAtom);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: (_evt, _gestureState) => false,
-      onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onPanResponderTerminationRequest: (_evt, _gestureState) => false,
-      onPanResponderMove: (_evt, _gestureState) => {
-        dragShape(shapeAtom);
-      },
-    })
-  ).current;
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: (_evt, _gestureState) => false,
+        onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
+        onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
+        onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
+        onPanResponderTerminationRequest: (_evt, _gestureState) => false,
+        onPanResponderMove: (_evt, _gestureState) => {
+          dragShape(shapeAtom);
+        },
+      }),
+    [dragShape, shapeAtom]
+  );
 
   return (
     <G

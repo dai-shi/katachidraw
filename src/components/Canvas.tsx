@@ -1,4 +1,4 @@
-import { FC, ReactElement, useEffect, useRef } from "react";
+import { FC, ReactElement, useEffect, useMemo } from "react";
 import { View, PanResponder } from "react-native";
 import Svg, { G } from "react-native-svg";
 import { useAtom } from "jotai";
@@ -36,29 +36,31 @@ export const Canvas: FC<Props> = ({
   const [zoom] = useAtom(zoomAtom);
   const [, drag] = useAtom(dragCanvasAtom);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: (_evt, _gestureState) => true,
-      onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onMoveShouldSetPanResponder: (_evt, _gestureState) => false,
-      onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
-      onPanResponderGrant: (_evt, gestureState) => {
-        drag({
-          type: "start",
-          pos: [gestureState.x0, gestureState.y0],
-        });
-      },
-      onPanResponderMove: (_evt, gestureState) => {
-        drag({
-          type: "move",
-          pos: [gestureState.moveX, gestureState.moveY],
-        });
-      },
-      onPanResponderRelease: (_evt, _gestureState) => {
-        drag({ type: "end" });
-      },
-    })
-  ).current;
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: (_evt, _gestureState) => true,
+        onStartShouldSetPanResponderCapture: (_evt, _gestureState) => false,
+        onMoveShouldSetPanResponder: (_evt, _gestureState) => false,
+        onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => false,
+        onPanResponderGrant: (_evt, gestureState) => {
+          drag({
+            type: "start",
+            pos: [gestureState.x0, gestureState.y0],
+          });
+        },
+        onPanResponderMove: (_evt, gestureState) => {
+          drag({
+            type: "move",
+            pos: [gestureState.moveX, gestureState.moveY],
+          });
+        },
+        onPanResponderRelease: (_evt, _gestureState) => {
+          drag({ type: "end" });
+        },
+      }),
+    [drag]
+  );
 
   return (
     <View {...panResponder.panHandlers}>
