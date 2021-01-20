@@ -12,7 +12,7 @@ import {
 } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
-export const SvgShape: FC<{
+export const Shape: FC<{
   shapeAtom: ShapeAtom;
 }> = ({ shapeAtom }) => {
   const [mode] = useAtom(modeAtom); // XXX this is very unfortunate (re-render all shapes)
@@ -67,4 +67,4 @@ export const SvgShape: FC<{
   );
 };
 
-export default memo(SvgShape);
+export default memo(Shape);

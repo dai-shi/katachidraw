@@ -26,7 +26,7 @@ const size = 36;
 const margin = 8;
 const radius = 6;
 
-export const SvgToolbar: FC = () => {
+export const Toolbar: FC = () => {
   const [tools, dispatch] = useAtom(toolbarAtom);
   return (
     <>
@@ -73,4 +73,4 @@ export const SvgToolbar: FC = () => {
   );
 };
 
-export default memo(SvgToolbar);
+export default memo(Toolbar);

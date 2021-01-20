@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 
 import { dotsAtom } from "../atoms/dots";
 
-export const SvgDots: FC = () => {
+export const Dots: FC = () => {
   const [dots] = useAtom(dotsAtom);
   return (
     <>
@@ -15,4 +15,4 @@ export const SvgDots: FC = () => {
   );
 };
 
-export default memo(SvgDots);
+export default memo(Dots);
