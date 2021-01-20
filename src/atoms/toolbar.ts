@@ -20,7 +20,7 @@ export const toolbarAtom = atom(
         id: "erase",
         active: mode === "erase",
       },
-      ...(selected ? [{ id: "palette" }] : []),
+      ...(selected.size ? [{ id: "palette" }] : []),
       {
         id: "zoomIn",
       },
