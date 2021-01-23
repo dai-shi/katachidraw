@@ -61,7 +61,7 @@ export const Shape: FC<{
         fill="none"
         stroke="red"
         opacity={shape.selected ? 0.2 : 0}
-        strokeWidth="20"
+        strokeWidth="30"
       />
       <Path d={shape.path} fill="none" stroke={shape.color} strokeWidth="4" />
     </G>
