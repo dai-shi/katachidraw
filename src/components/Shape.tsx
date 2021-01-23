@@ -9,7 +9,7 @@ import { ShapeAtom, selectAtom } from "../atoms/shapes";
 import {
   setPressingShapeAtom,
   IsPointInShape,
-  registerIsPointInShape,
+  registerIsPointInShapeAtom,
 } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
@@ -20,6 +20,7 @@ export const Shape: FC<{
   const [shape] = useAtom(shapeAtom);
   const [, select] = useAtom(selectAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
+  const [, registerIsPointInShape] = useAtom(registerIsPointInShapeAtom);
 
   return (
     <G
@@ -53,7 +54,7 @@ export const Shape: FC<{
             return instance.isPointInFill(point);
           };
         }
-        registerIsPointInShape(shapeAtom, isPointInShape);
+        registerIsPointInShape({ shapeAtom, isPointInShape });
       }}
     >
       <Path

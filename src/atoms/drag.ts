@@ -146,6 +146,7 @@ export const dragCanvasAtom = atom(
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {});
       } else if (action.type === "move" && dragStart) {
+        const isPointInShapeMap = get(isPointInShapeMapAtom);
         const pressing = get(pressingShapeAtom);
         get(allShapesAtom).forEach((shapeAtom) => {
           if (shapeAtom === pressing) {
@@ -164,19 +165,30 @@ export const dragCanvasAtom = atom(
   }
 );
 
-// XXX this is very hacky, hope to improve it
-
 export type IsPointInShape = (
   point: readonly [number, number],
   offset: { x: number; y: number },
   zoom: number
 ) => boolean;
 
-export const isPointInShapeMap = new WeakMap<ShapeAtom, IsPointInShape>();
+export const isPointInShapeMapAtom = atom(
+  () => new WeakMap<ShapeAtom, IsPointInShape>()
+);
 
-export const registerIsPointInShape = (
-  shapeAtom: ShapeAtom,
-  isPointInShape: IsPointInShape
-) => {
-  isPointInShapeMap.set(shapeAtom, isPointInShape);
-};
+export const registerIsPointInShapeAtom = atom(
+  (get) => get(isPointInShapeMapAtom), // XXX needs this for avoid uninitialized error
+  (
+    get,
+    _set,
+    {
+      shapeAtom,
+      isPointInShape,
+    }: {
+      shapeAtom: ShapeAtom;
+      isPointInShape: IsPointInShape;
+    }
+  ) => {
+    const isPointInShapeMap = get(isPointInShapeMapAtom);
+    isPointInShapeMap.set(shapeAtom, isPointInShape);
+  }
+);
