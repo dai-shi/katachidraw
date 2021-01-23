@@ -1,3 +1,4 @@
+import * as React from "react"; // for expo
 import { FC, useState, useEffect } from "react";
 import { Dimensions } from "react-native";
 import { Provider } from "jotai";

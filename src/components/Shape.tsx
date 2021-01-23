@@ -1,3 +1,4 @@
+import * as React from "react"; // for expo
 import { FC, memo } from "react";
 import { Platform } from "react-native";
 import { G, Path } from "react-native-svg";

@@ -1,3 +1,5 @@
+// For create-react-app
+
 import { AppRegistry } from "react-native";
 
 import App from "./components/App";

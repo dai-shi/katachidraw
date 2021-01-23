@@ -1,3 +1,4 @@
+import * as React from "react"; // for expo
 import { Path } from "react-native-svg";
 
 const Pen: React.FC = () => (

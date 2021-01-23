@@ -1,3 +1,4 @@
+import * as React from "react"; // for expo
 import { FC, memo } from "react";
 import { Circle } from "react-native-svg";
 import { useAtom } from "jotai";

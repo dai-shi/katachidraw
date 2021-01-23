@@ -1,3 +1,5 @@
+// for library package
+
 export * from "./components/App";
 export * from "./components/Canvas";
 export * from "./components/Dots";
