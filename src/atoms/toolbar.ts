@@ -20,7 +20,7 @@ export const toolbarAtom = atom(
         id: "erase",
         active: mode === "erase",
       },
-      ...(selected.size ? [{ id: "palette" }] : []),
+      ...(selected.size ? [{ id: "color", active: mode === "color" }] : []),
       {
         id: "zoomIn",
       },
@@ -42,21 +42,8 @@ export const toolbarAtom = atom(
         x: prev.x + (dimension.width * (1 / zoom - 1 / nextZoom)) / 2,
         y: prev.y + (dimension.height * (1 / zoom - 1 / nextZoom)) / 2,
       }));
-    } else if (id === "palette") {
-      const selected = get(selectedAtom);
-      selected.forEach((shapeAtom) => {
-        set(shapeAtom, (prev) => ({
-          ...prev,
-          color:
-            prev.color === "black"
-              ? "green"
-              : prev.color === "green"
-              ? "blue"
-              : prev.color === "blue"
-              ? "red"
-              : "black",
-        }));
-      });
+    } else if (id === "color") {
+      set(modeAtom, "color");
     }
   }
 );

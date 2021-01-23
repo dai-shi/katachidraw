@@ -4,6 +4,7 @@ import { G, Rect } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { toolbarAtom } from "../atoms/toolbar";
+import ColorPicker from "../components/ColorPicker";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 import PenIcon from "../icons/Pen";
 import HandIcon from "../icons/Hand";
@@ -17,7 +18,7 @@ const icons: Record<string, ReactElement> = {
   hand: <HandIcon />,
   zoomIn: <ZoomInIcon />,
   zoomOut: <ZoomOutIcon />,
-  palette: <PaletteIcon />,
+  color: <PaletteIcon />,
   erase: <DeleteIcon />,
 };
 
@@ -70,6 +71,12 @@ export const Toolbar: FC = () => {
           </G>
         </G>
       ))}
+      <G
+        id="colorpicker"
+        transform={`translate(${left + size + margin * 2} ${top + margin})`}
+      >
+        <ColorPicker />
+      </G>
     </>
   );
 };

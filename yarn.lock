@@ -4328,6 +4328,11 @@ color-name@^1.0.0, color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
+color-picker-react-native@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/color-picker-react-native/-/color-picker-react-native-1.0.7.tgz#5ed58de6272fa64eb6be82445d931b03d26a3441"
+  integrity sha512-/spoHhU/LqwH4cQwRCZAUu6WtW3zO7Oaq2SpBhgnUvd9TUiwkstWc4IvtbTUld/Wyc46S2h9yGN7k5hd8rETtQ==
+
 color-string@^1.5.3, color-string@^1.5.4:
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.4.tgz#dd51cd25cfee953d138fe4002372cc3d0e504cb6"

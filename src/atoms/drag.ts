@@ -162,6 +162,22 @@ export const dragCanvasAtom = atom(
       }
       return;
     }
+
+    // color mode
+    if (mode === "color") {
+      if (action.type === "start" && !dragStart) {
+        set(dragCanvasStartAtom, {});
+      } else if (action.type === "end" && dragStart) {
+        if (action.type === "end") {
+          if (selected.size) {
+            set(modeAtom, "hand");
+          } else {
+            set(modeAtom, "pen");
+          }
+        }
+      }
+      return;
+    }
   }
 );
 
