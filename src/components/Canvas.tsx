@@ -74,7 +74,6 @@ export const Canvas: FC<Props> = ({
           offset.y + toolbarPosition[1] / zoom
         }) scale(${1 / zoom})`}
         onPressIn={(e) => {
-          e.preventDefault();
           e.stopPropagation();
         }}
         ref={hackTouchableNode}
