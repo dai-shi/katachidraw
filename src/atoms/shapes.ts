@@ -10,10 +10,13 @@ export type ShapeAtom = PrimitiveAtom<{
   selected?: boolean;
 }>;
 
+export const colorAtom = atom("black");
+
 export const allShapesAtom = atom<ShapeAtom[]>([]);
 
 export const addShapeAtom = atom(null, (get, set, path: string) => {
-  const shapeAtom = atom({ path, color: "black", x: 0, y: 0 });
+  const color = get(colorAtom);
+  const shapeAtom = atom({ path, color, x: 0, y: 0 });
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
 });
 

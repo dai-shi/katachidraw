@@ -1,32 +1,18 @@
 import { atom } from "jotai";
 
 import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
-import { selectedAtom, clearSelectionAtom } from "./shapes";
+import { clearSelectionAtom } from "./shapes";
 
 export const toolbarAtom = atom(
   (get) => {
     const mode = get(modeAtom);
-    const selected = get(selectedAtom);
     return [
-      {
-        id: "hand",
-        active: mode === "hand",
-      },
-      {
-        id: "pen",
-        active: mode === "pen",
-      },
-      {
-        id: "erase",
-        active: mode === "erase",
-      },
-      ...(selected.size ? [{ id: "color", active: mode === "color" }] : []),
-      {
-        id: "zoomIn",
-      },
-      {
-        id: "zoomOut",
-      },
+      { id: "hand", active: mode === "hand" },
+      { id: "pen", active: mode === "pen" },
+      { id: "erase", active: mode === "erase" },
+      { id: "color", active: mode === "color" },
+      { id: "zoomIn" },
+      { id: "zoomOut" },
     ];
   },
   (get, set, id) => {
