@@ -1,14 +1,12 @@
 import * as React from "react"; // for expo
 import { FC, memo } from "react";
+import { Rect } from "react-native-svg";
 import { useAtom } from "jotai";
-// @ts-ignore
-import { ColorPicker as CP } from "color-picker-react-native";
 
 import { modeAtom } from "../atoms/canvas";
 import { setColorAtom } from "../atoms/colorPicker";
+import { hackTouchableNode } from "../utils/touchHandlerHack";
 import openColors from "../utils/open-color.json";
-
-const colorIndex = 7;
 
 export const ColorPicker: FC = () => {
   const [mode] = useAtom(modeAtom);
@@ -17,26 +15,45 @@ export const ColorPicker: FC = () => {
     return null;
   }
   return (
-    <CP
-      size={250}
-      getColor={setColor}
-      colorArray={[
-        openColors.black,
-        openColors.gray[colorIndex],
-        openColors.red[colorIndex],
-        openColors.pink[colorIndex],
-        openColors.grape[colorIndex],
-        openColors.violet[colorIndex],
-        openColors.indigo[colorIndex],
-        openColors.blue[colorIndex],
-        openColors.cyan[colorIndex],
-        openColors.teal[colorIndex],
-        openColors.green[colorIndex],
-        openColors.lime[colorIndex],
-        openColors.yellow[colorIndex],
-        openColors.orange[colorIndex],
-      ]}
-    />
+    <>
+      <Rect
+        x={0}
+        y={0}
+        width={30 * 10}
+        height={30}
+        fill="black"
+        onPress={() => setColor("black")}
+        ref={hackTouchableNode}
+      />
+      {([
+        "gray",
+        "red",
+        "pink",
+        "grape",
+        "violet",
+        "indigo",
+        "blue",
+        "cyan",
+        "teal",
+        "green",
+        "lime",
+        "yellow",
+        "orange",
+      ] as const).map((colorName, index) =>
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((colorIndex) => (
+          <Rect
+            key={`${colorName}-${colorIndex}`}
+            x={30 * (9 - colorIndex)}
+            y={30 * (1 + index)}
+            width={30}
+            height={30}
+            fill={openColors[colorName][colorIndex]}
+            onPress={() => setColor(openColors[colorName][colorIndex])}
+            ref={hackTouchableNode}
+          />
+        ))
+      )}
+    </>
   );
 };
 

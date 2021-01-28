@@ -73,7 +73,7 @@ export const Toolbar: FC = () => {
       ))}
       <G
         id="colorpicker"
-        transform={`translate(${left + size + margin * 2} ${top + margin})`}
+        transform={`translate(${left + size + margin * 3} ${top + margin})`}
       >
         <ColorPicker />
       </G>

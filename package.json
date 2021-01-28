@@ -39,7 +39,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "color-picker-react-native": "^1.0.7",
     "jotai": "^0.12.5",
     "points-on-curve": "^0.2.0",
     "react": "^17.0.1",
