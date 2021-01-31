@@ -28,7 +28,13 @@ const size = 36;
 const margin = 8;
 const radius = 6;
 
-export const Toolbar: FC = () => {
+type Props = {
+  ColorPickerElement?: ReactElement;
+};
+
+export const Toolbar: FC<Props> = ({
+  ColorPickerElement = <ColorPicker />,
+}) => {
   const [tools, dispatch] = useAtom(toolbarAtom);
   return (
     <>
@@ -75,7 +81,7 @@ export const Toolbar: FC = () => {
         id="colorpicker"
         transform={`translate(${left + size + margin * 3} ${top + margin})`}
       >
-        <ColorPicker />
+        {ColorPickerElement}
       </G>
     </>
   );
