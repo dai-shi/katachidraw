@@ -28,7 +28,9 @@ export const toolbarAtom = atom(
         x: prev.x + (dimension.width * (1 / zoom - 1 / nextZoom)) / 2,
         y: prev.y + (dimension.height * (1 / zoom - 1 / nextZoom)) / 2,
       }));
-      set(resetModeBasedOnSelection, null);
+      if (get(modeAtom) === "color") {
+        set(resetModeBasedOnSelection, null);
+      }
     } else if (id === "color") {
       if (get(modeAtom) === "color") {
         set(resetModeBasedOnSelection, null);
