@@ -11,21 +11,12 @@ import {
   resetModeBasedOnSelection,
 } from "./shapes";
 
-const pressingShapeAtom = atom<ShapeAtom | null>(null);
-export const setPressingShapeAtom = atom(
-  null,
-  (_get, set, shapeAtom: ShapeAtom | null) => {
-    set(pressingShapeAtom, shapeAtom);
-  }
-);
-
 type ShapeMap = Map<object, { x: number; y: number }>;
 
 const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
   dragged?: boolean;
-  hasPressingShape?: boolean;
   startTime?: number;
 } | null>(null);
 
@@ -86,7 +77,6 @@ export const dragCanvasAtom = atom(
         });
         set(dragCanvasStartAtom, {
           shapeMap,
-          hasPressingShape: !!get(pressingShapeAtom),
           startTime: performance.now(),
         });
       } else if (action.type === "move" && dragStart) {
@@ -106,10 +96,8 @@ export const dragCanvasAtom = atom(
         });
       } else if (action.type === "end" && dragStart) {
         if (
-          (!dragStart.dragged ||
-            performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) <
-              150) &&
-          !dragStart.hasPressingShape
+          !dragStart.dragged ||
+          performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) < 150
         ) {
           set(clearSelectionAtom, null);
         }
@@ -148,11 +136,7 @@ export const dragCanvasAtom = atom(
         set(dragCanvasStartAtom, {});
       } else if (action.type === "move" && dragStart) {
         const isPointInShapeMap = get(isPointInShapeMapAtom);
-        const pressing = get(pressingShapeAtom);
         get(allShapesAtom).forEach((shapeAtom) => {
-          if (shapeAtom === pressing) {
-            return;
-          }
           const isPointInShape = isPointInShapeMap.get(shapeAtom);
           if (isPointInShape && isPointInShape(action.pos, offset, zoom)) {
             set(deleteShapeAtom, shapeAtom);
