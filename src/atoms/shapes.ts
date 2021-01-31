@@ -66,3 +66,12 @@ export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
   set(unselectAtom, shapeAtom);
   set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
 });
+
+export const resetModeBasedOnSelection = atom(null, (get, set, _arg) => {
+  const selected = get(selectedAtom);
+  if (selected.size) {
+    set(modeAtom, "hand");
+  } else {
+    set(modeAtom, "pen");
+  }
+});

@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 
 import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
-import { clearSelectionAtom } from "./shapes";
+import { clearSelectionAtom, resetModeBasedOnSelection } from "./shapes";
 
 export const toolbarAtom = atom(
   (get) => {
@@ -28,8 +28,13 @@ export const toolbarAtom = atom(
         x: prev.x + (dimension.width * (1 / zoom - 1 / nextZoom)) / 2,
         y: prev.y + (dimension.height * (1 / zoom - 1 / nextZoom)) / 2,
       }));
+      set(resetModeBasedOnSelection, null);
     } else if (id === "color") {
-      set(modeAtom, "color");
+      if (get(modeAtom) === "color") {
+        set(resetModeBasedOnSelection, null);
+      } else {
+        set(modeAtom, "color");
+      }
     }
   }
 );

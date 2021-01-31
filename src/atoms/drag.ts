@@ -8,6 +8,7 @@ import {
   allShapesAtom,
   clearSelectionAtom,
   deleteShapeAtom,
+  resetModeBasedOnSelection,
 } from "./shapes";
 
 const pressingShapeAtom = atom<ShapeAtom | null>(null);
@@ -169,11 +170,7 @@ export const dragCanvasAtom = atom(
         set(dragCanvasStartAtom, {});
       } else if (action.type === "end" && dragStart) {
         if (action.type === "end") {
-          if (selected.size) {
-            set(modeAtom, "hand");
-          } else {
-            set(modeAtom, "pen");
-          }
+          set(resetModeBasedOnSelection, null);
         }
       }
       return;
