@@ -40,6 +40,7 @@ export const Canvas: FC<Props> = ({
     <Svg
       viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}
       onStartShouldSetResponder={() => true}
+      onMoveShouldSetResponderCapture={() => true}
       onResponderGrant={(e) => {
         const { locationX, locationY } = e.nativeEvent;
         drag({
