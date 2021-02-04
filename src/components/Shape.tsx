@@ -65,6 +65,13 @@ export const Shape: FC<{
         strokeWidth="30"
       />
       <Path d={shape.path} fill="none" stroke={shape.color} strokeWidth="4" />
+      {/* HACK for RN's buggy isPointInStroke? */}
+      <G transform="rotate(0.2)">
+        <Path d={shape.path} />
+      </G>
+      <G transform="rotate(-0.2)">
+        <Path d={shape.path} />
+      </G>
     </G>
   );
 };
