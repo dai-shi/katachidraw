@@ -169,9 +169,8 @@ export const dragCanvasAtom = atom(
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {});
       } else if (action.type === "end" && dragStart) {
-        if (action.type === "end") {
-          set(resetModeBasedOnSelection, null);
-        }
+        set(dragCanvasStartAtom, null);
+        set(resetModeBasedOnSelection, null);
       }
       return;
     }
