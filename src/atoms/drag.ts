@@ -153,7 +153,7 @@ export const dragCanvasAtom = atom(
           if (shapeAtom === pressing) {
             return;
           }
-          const isPointInShape = isPointInShapeMap.get(shapeAtom);
+          const isPointInShape = isPointInShapeMap?.get(shapeAtom);
           if (isPointInShape && isPointInShape(action.pos, offset, zoom)) {
             set(deleteShapeAtom, shapeAtom);
           }
@@ -183,15 +183,15 @@ export type IsPointInShape = (
   zoom: number
 ) => boolean;
 
-export const isPointInShapeMapAtom = atom(
-  () => new WeakMap<ShapeAtom, IsPointInShape>()
+const isPointInShapeMapAtom = atom<WeakMap<ShapeAtom, IsPointInShape> | null>(
+  null
 );
 
 export const registerIsPointInShapeAtom = atom(
-  (get) => get(isPointInShapeMapAtom), // XXX needs this for avoid uninitialized error
+  null,
   (
     get,
-    _set,
+    set,
     {
       shapeAtom,
       isPointInShape,
@@ -200,7 +200,11 @@ export const registerIsPointInShapeAtom = atom(
       isPointInShape: IsPointInShape;
     }
   ) => {
-    const isPointInShapeMap = get(isPointInShapeMapAtom);
+    let isPointInShapeMap = get(isPointInShapeMapAtom);
+    if (!isPointInShapeMap) {
+      isPointInShapeMap = new WeakMap<ShapeAtom, IsPointInShape>();
+      set(isPointInShapeMapAtom, isPointInShapeMap);
+    }
     isPointInShapeMap.set(shapeAtom, isPointInShape);
   }
 );
