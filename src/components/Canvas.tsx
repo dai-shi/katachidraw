@@ -9,6 +9,7 @@ import Shapes from "./Shapes";
 import Dots from "./Dots";
 import Toolbar from "./Toolbar";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
+import { FileSystem } from "../modules/file-system/FileSystem";
 
 type Props = {
   width: number;
@@ -25,7 +26,7 @@ export const Canvas: FC<Props> = ({
   toolbarPosition = [5, 50],
   ShapesElement = <Shapes />,
   DotsElement = <Dots />,
-  ToolbarElement = <Toolbar />,
+  ToolbarElement = <Toolbar fileSystemModule={FileSystem} />,
 }) => {
   const [, setDimension] = useAtom(dimensionAtom);
   useEffect(() => {

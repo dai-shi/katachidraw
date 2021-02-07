@@ -12,6 +12,8 @@ import ZoomInIcon from "../icons/ZoomIn";
 import ZoomOutIcon from "../icons/ZoomOut";
 import PaletteIcon from "../icons/Palette";
 import DeleteIcon from "../icons/Delete";
+import SaveIcon from "../icons/Save";
+import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 
 const icons: Record<string, ReactElement> = {
   pen: <PenIcon />,
@@ -20,6 +22,7 @@ const icons: Record<string, ReactElement> = {
   zoomOut: <ZoomOutIcon />,
   color: <PaletteIcon />,
   erase: <DeleteIcon />,
+  save: <SaveIcon />,
 };
 
 const left = 0;
@@ -30,10 +33,12 @@ const radius = 6;
 
 type Props = {
   ColorPickerElement?: ReactElement;
+  fileSystemModule: FileSystemModule;
 };
 
 export const Toolbar: FC<Props> = ({
   ColorPickerElement = <ColorPicker />,
+  fileSystemModule,
 }) => {
   const [tools, dispatch] = useAtom(toolbarAtom);
   return (
@@ -52,7 +57,7 @@ export const Toolbar: FC<Props> = ({
         <G
           key={tool.id}
           onPress={() => {
-            dispatch(tool.id);
+            dispatch({ id: tool.id, fileSystemModule });
           }}
           ref={hackTouchableNode}
         >
