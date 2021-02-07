@@ -52,10 +52,7 @@ export const toolbarAtom = atom(
     } else if (id === "save") {
       const shapes = get(allShapesAtom).map((shapeAtom) => get(shapeAtom));
       const svgString = serialize(PrintCanvas({ shapes }));
-      fileSystemModule.saveFileAsString("output.svg", svgString, {
-        mimeType: "image/svg+xml",
-        extension: ".svg",
-      });
+      fileSystemModule.saveSvgFile(svgString);
     }
   }
 );

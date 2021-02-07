@@ -1,4 +1,4 @@
-import { ReactElement, Children, createElement } from "react";
+import { ReactNode, Children, createElement } from "react";
 import { Platform } from "react-native";
 import ReactDOMServer from "react-dom/server";
 
@@ -14,7 +14,7 @@ const childToWeb = (child: any) => {
 
 const toWeb = (children: any): any => Children.map(children, childToWeb);
 
-export const serialize = (element: ReactElement) => {
+export const serialize = (element: ReactNode) => {
   const webJsx = isWeb ? element : toWeb(element);
   const svgString = ReactDOMServer.renderToStaticMarkup(webJsx);
   return svgString;

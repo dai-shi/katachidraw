@@ -4,17 +4,8 @@ import * as Sharing from "expo-sharing";
 import { FileSystemModule } from "./FileSystemModule";
 
 export const FileSystem: FileSystemModule = {
-  saveFileAsString: async (
-    fileName: string,
-    content: string
-    /*
-    options: {
-      mimeType: string;
-      extension: string;
-    }
-    */
-  ) => {
-    const fileUri = ExpoFileSystem.documentDirectory + fileName;
+  saveSvgFile: async (content: string) => {
+    const fileUri = ExpoFileSystem.documentDirectory + "output.svg";
     await ExpoFileSystem.writeAsStringAsync(fileUri, content);
     await Sharing.shareAsync(fileUri);
   },
