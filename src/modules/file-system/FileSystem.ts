@@ -1,4 +1,5 @@
 import * as ExpoFileSystem from "expo-file-system";
+import * as ExpoMediaLibrary from "expo-media-library";
 
 import { FileSystemModule } from "./FileSystemModule";
 
@@ -13,6 +14,8 @@ export const FileSystem: FileSystemModule = {
     }
     */
   ) => {
-    await ExpoFileSystem.writeAsStringAsync(`file://${fileName}`, content);
+    const fileUri = ExpoFileSystem.documentDirectory + fileName;
+    await ExpoFileSystem.writeAsStringAsync(fileUri, content);
+    await ExpoMediaLibrary.saveToLibraryAsync(fileUri);
   },
 };

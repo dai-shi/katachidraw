@@ -6066,6 +6066,13 @@ expo-location@~10.0.0:
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-10.0.0.tgz#2923411649434f2f079343b163b13c5c9eee8b2d"
   integrity sha512-QLEb0iaBv4/blLxxfKRj2/HPisY+1t+g6MgegqZ1j1U/0qih4dvzUQrxie9ZOZyQB9gnXFCRnZv3QzHEb52dcA==
 
+expo-media-library@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-11.0.0.tgz#e37f1ff0c5a19c14a3989ad2b4f8b9f26522c23f"
+  integrity sha512-yRCce1tmn0WuVC64E+eS4Ez0w8jO4UVf0wz/rAYxJHquSOOC40HRQhzvmAhvAhfzeNGrVvQW/5j+IX+yzwq2QA==
+  dependencies:
+    "@expo/config-plugins" "~1.0.13"
+
 expo-permissions@~10.0.0:
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-10.0.0.tgz#5b31c54d561d00c7e46cd02321bc3704c51c584b"
