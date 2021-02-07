@@ -1,5 +1,5 @@
 import * as ExpoFileSystem from "expo-file-system";
-import * as ExpoMediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
 
 import { FileSystemModule } from "./FileSystemModule";
 
@@ -16,6 +16,6 @@ export const FileSystem: FileSystemModule = {
   ) => {
     const fileUri = ExpoFileSystem.documentDirectory + fileName;
     await ExpoFileSystem.writeAsStringAsync(fileUri, content);
-    await ExpoMediaLibrary.saveToLibraryAsync(fileUri);
+    await Sharing.shareAsync(fileUri);
   },
 };
