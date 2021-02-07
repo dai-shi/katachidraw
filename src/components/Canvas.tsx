@@ -38,38 +38,39 @@ export const Canvas: FC<Props> = ({
   const [, drag] = useAtom(dragCanvasAtom);
 
   return (
-    <Svg
-      viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}
-      onStartShouldSetResponder={() => true}
-      onMoveShouldSetResponderCapture={() => true}
-      onResponderGrant={(e) => {
-        const { locationX, locationY } = e.nativeEvent;
-        drag({
-          type: "start",
-          pos: [locationX, locationY],
-        });
-      }}
-      onResponderMove={(e) => {
-        const { locationX, locationY } = e.nativeEvent;
-        drag({
-          type: "move",
-          pos: [locationX, locationY],
-        });
-      }}
-      onResponderEnd={() => {
-        drag({ type: "end" });
-      }}
-      ref={hackTouchableNode}
-    >
-      <Rect
-        x={offset.x}
-        y={offset.y}
-        width={width / zoom}
-        height={height / zoom}
-        opacity="0"
-      />
-      {ShapesElement}
-      {DotsElement}
+    <Svg viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}>
+      <G
+        onStartShouldSetResponder={() => true}
+        onMoveShouldSetResponderCapture={() => true}
+        onResponderGrant={(e) => {
+          const { locationX, locationY } = e.nativeEvent;
+          drag({
+            type: "start",
+            pos: [locationX, locationY],
+          });
+        }}
+        onResponderMove={(e) => {
+          const { locationX, locationY } = e.nativeEvent;
+          drag({
+            type: "move",
+            pos: [locationX, locationY],
+          });
+        }}
+        onResponderEnd={() => {
+          drag({ type: "end" });
+        }}
+        ref={hackTouchableNode}
+      >
+        <Rect
+          x={offset.x}
+          y={offset.y}
+          width={width / zoom}
+          height={height / zoom}
+          opacity="0"
+        />
+        {ShapesElement}
+        {DotsElement}
+      </G>
       <G
         id="toolbar"
         transform={`translate(${offset.x + toolbarPosition[0] / zoom} ${
