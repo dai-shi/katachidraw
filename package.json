@@ -39,6 +39,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "expo-image-picker": "^10.0.0",
     "jotai": "^0.12.7",
     "points-on-curve": "^0.2.0",
     "react": "^17.0.1",
