@@ -2,13 +2,24 @@ import { atom, PrimitiveAtom } from "jotai";
 
 import { modeAtom } from "./canvas";
 
-export type ShapeAtom = PrimitiveAtom<{
-  path: string;
-  color: string;
+type TShapeCommon = {
   x: number;
   y: number;
   selected?: boolean;
-}>;
+};
+
+export type TShapePath = TShapeCommon & {
+  path: string;
+  color: string;
+};
+
+export type TShapeImage = TShapeCommon & {
+  image: string;
+};
+
+export type TShape = TShapePath | TShapeImage;
+
+export type ShapeAtom = PrimitiveAtom<TShape>;
 
 export const colorAtom = atom("black");
 
@@ -16,7 +27,7 @@ export const allShapesAtom = atom<ShapeAtom[]>([]);
 
 export const addShapeAtom = atom(null, (get, set, path: string) => {
   const color = get(colorAtom);
-  const shapeAtom = atom({ path, color, x: 0, y: 0 });
+  const shapeAtom = atom({ path, color, x: 0, y: 0 } as TShape);
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
 });
 
