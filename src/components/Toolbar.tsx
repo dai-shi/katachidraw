@@ -13,6 +13,7 @@ import ZoomOutIcon from "../icons/ZoomOut";
 import PaletteIcon from "../icons/Palette";
 import DeleteIcon from "../icons/Delete";
 import SaveIcon from "../icons/Save";
+import ImageIcon from "../icons/Image";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 
 const icons: Record<string, ReactElement> = {
@@ -23,6 +24,7 @@ const icons: Record<string, ReactElement> = {
   color: <PaletteIcon />,
   erase: <DeleteIcon />,
   save: <SaveIcon />,
+  image: <ImageIcon />,
 };
 
 const left = 0;

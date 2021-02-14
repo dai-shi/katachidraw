@@ -5,6 +5,7 @@ import {
   clearSelectionAtom,
   resetModeBasedOnSelection,
   allShapesAtom,
+  addShapeImageAtom,
 } from "./shapes";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 import { serialize } from "../utils/serialize";
@@ -20,6 +21,7 @@ export const toolbarAtom = atom(
       { id: "color", active: mode === "color" },
       { id: "zoomIn" },
       { id: "zoomOut" },
+      { id: "image" },
       { id: "save" },
     ];
   },
@@ -49,6 +51,10 @@ export const toolbarAtom = atom(
       } else {
         set(modeAtom, "color");
       }
+    } else if (id === "image") {
+      fileSystemModule.loadImageFile().then((image) => {
+        set(addShapeImageAtom, image);
+      });
     } else if (id === "save") {
       const shapes = get(allShapesAtom).map((shapeAtom) => get(shapeAtom));
       const svgString = serialize(PrintCanvas({ shapes }));

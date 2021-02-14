@@ -25,9 +25,15 @@ export const colorAtom = atom("black");
 
 export const allShapesAtom = atom<ShapeAtom[]>([]);
 
-export const addShapeAtom = atom(null, (get, set, path: string) => {
+export const addShapePathAtom = atom(null, (get, set, path: string) => {
   const color = get(colorAtom);
   const shapeAtom = atom({ path, color, x: 0, y: 0 } as TShape);
+  set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
+});
+
+export const addShapeImageAtom = atom(null, (get, set, image: string) => {
+  // TODO nicer initial position
+  const shapeAtom = atom({ image, x: 100, y: 100 } as TShape);
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
 });
 
