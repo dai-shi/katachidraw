@@ -11,13 +11,13 @@ Katachidraw means like "Let's make shapes" in Japanese.
 
 ## What is this
 
-There are two aspects: User perspective and developer perspective
+There are two aspects: User's perspective and developer's perspective
 
 ### What is this for users
 
 This is a drawing tool that can produce an SVG file.
-It's primary for mobile, but works for desktop too.
-One of the goal is to draw freely and create smoother shapes.
+It's primarily for mobile, but works for desktop too.
+One of the goals is to draw freely and create smoother shapes.
 
 Visit <https://katachidraw.vercel.app/> in your browser.
 
@@ -27,8 +27,8 @@ Tested with:
 
 ### What is this for developers
 
-This is a reusable library that can be embeded in your React app.
-It's based on following libraries:
+This is a reusable drawing library that can be embeded in your React app.
+It's built with following libraries:
 - [Expo](https://expo.io) React Native
 - [React Native SVG](https://github.com/react-native-svg/react-native-svg)
 - [Jotai](https://github.com/pmndrs/jotai)
@@ -44,4 +44,4 @@ the development in [our Discord server](https://discord.gg/MrQdmzd).
 
 Feel free to use the library under the MIT license.
 If you find bugs, please file issues.
-Pull requests are also welcome and there are some issues are filed.
+Pull requests are also welcome and there are some issues are filed for a start.
