@@ -1,6 +1,6 @@
 import * as React from "react"; // for expo
 import { FC, ComponentType, ComponentProps } from "react";
-import SvgOrig, { G, Path } from "react-native-svg";
+import SvgOrig, { G, Path, Image } from "react-native-svg";
 
 import { TShape } from "../atoms/shapes";
 
@@ -24,6 +24,14 @@ export const PrintCanvas: FC<Props> = ({ shapes }) => (
             fill="none"
             stroke={shape.color}
             strokeWidth="4"
+          />
+        )}
+        {"image" in shape && (
+          <Image
+            href={shape.image as any}
+            width={shape.width}
+            height={shape.height}
+            preserveAspectRatio="xMinYMin meet"
           />
         )}
       </G>

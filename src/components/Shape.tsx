@@ -118,6 +118,9 @@ const ShapeImage: React.FC<{
         href={
           Platform.OS === "web" ? (shape.image as any) : { uri: shape.image }
         }
+        width={shape.width}
+        height={shape.height}
+        preserveAspectRatio="xMinYMin meet"
       />
     </G>
   );

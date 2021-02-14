@@ -15,6 +15,8 @@ export type TShapePath = TShapeCommon & {
 
 export type TShapeImage = TShapeCommon & {
   image: string;
+  width: number;
+  height: number;
 };
 
 export type TShape = TShapePath | TShapeImage;
@@ -32,8 +34,14 @@ export const addShapePathAtom = atom(null, (get, set, path: string) => {
 });
 
 export const addShapeImageAtom = atom(null, (get, set, image: string) => {
-  // TODO nicer initial position
-  const shapeAtom = atom({ image, x: 100, y: 100 } as TShape);
+  // TODO nicer initial position and width
+  const shapeAtom = atom({
+    image,
+    x: 100,
+    y: 100,
+    width: 300,
+    height: 300,
+  } as TShape);
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
 });
 

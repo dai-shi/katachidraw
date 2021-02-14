@@ -5,6 +5,9 @@ import ReactDOMServer from "react-dom/server";
 const isWeb = Platform.OS === "web";
 
 const childToWeb = (child: any) => {
+  if (!child) {
+    return null;
+  }
   const { type, props } = child;
   const name = type && type.displayName;
   const webName = name && name[0].toLowerCase() + name.slice(1);
