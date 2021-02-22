@@ -69,7 +69,7 @@ const ShapePath: React.FC<{
         opacity={shape.selected ? 0.2 : 0}
         strokeWidth="30"
       />
-      <Path d={shape.path} fill="none" stroke={shape.color} strokeWidth="4" />
+      <Path d={shape.path} fill={shape.color} />
       {/* HACK for RN's buggy isPointInStroke? */}
       <G transform="rotate(0.2)">
         <Path d={shape.path} opacity="0" />

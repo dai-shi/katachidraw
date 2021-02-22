@@ -18,14 +18,7 @@ export const PrintCanvas: FC<Props> = ({ shapes }) => (
   <Svg xmlns="http://www.w3.org/2000/svg">
     {shapes.map((shape, index) => (
       <G key={index} transform={`translate(${shape.x} ${shape.y})`}>
-        {"path" in shape && (
-          <Path
-            d={shape.path}
-            fill="none"
-            stroke={shape.color}
-            strokeWidth="4"
-          />
-        )}
+        {"path" in shape && <Path d={shape.path} fill={shape.color} />}
         {"image" in shape && (
           <Image
             href={shape.image as any}
