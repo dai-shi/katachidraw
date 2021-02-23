@@ -54,8 +54,6 @@ const ShapePath: React.FC<{
             const point = instance.ownerSVGElement.createSVGPoint();
             point.x = offset.x + pos[0] / zoom;
             point.y = offset.y + pos[1] / zoom;
-            // TODO isPointInStroke doesn't work
-            // x/y straight lines don't work
             return instance.isPointInFill(point);
           };
         }
@@ -64,19 +62,17 @@ const ShapePath: React.FC<{
     >
       <Path
         d={shape.path}
-        fill="none"
+        fill="red"
         stroke="red"
         opacity={shape.selected ? 0.2 : 0}
         strokeWidth="30"
       />
-      <Path d={shape.path} fill={shape.color} />
-      {/* HACK for RN's buggy isPointInStroke? */}
-      <G transform="rotate(0.2)">
-        <Path d={shape.path} opacity="0" />
-      </G>
-      <G transform="rotate(-0.2)">
-        <Path d={shape.path} opacity="0" />
-      </G>
+      <Path
+        d={shape.path}
+        fill={shape.color}
+        stroke={shape.color}
+        strokeWidth="2"
+      />
     </G>
   );
 };
