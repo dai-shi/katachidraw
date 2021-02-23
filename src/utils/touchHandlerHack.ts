@@ -13,33 +13,32 @@ export const hackTouchableNode = (instance: any) => {
       move = "touchmove";
       up = "touchend";
     }
-    let moveCount = 0;
     const onDown = (e: any) => {
       if (emulateResponder) {
         props.onResponderGrant?.(hackEvent(e));
       }
       props.onPressIn?.(hackEvent(e));
-      moveCount = 0;
+      node._moveCount = 0;
     };
     const onMove = (e: any) => {
       if (emulateResponder) {
         props.onResponderMove?.(hackEvent(e));
       }
-      moveCount += 1;
+      node._moveCount += 1;
     };
     const onUp = () => {
       if (emulateResponder) {
         props.onResponderEnd?.();
       }
       props.onPressOut?.();
-      if (moveCount <= 1) {
+      if (node._moveCount <= 1) {
         // assume press with small move
         const { onPress } = props;
         if (onPress) {
           setTimeout(onPress, 0);
         }
       }
-      moveCount = 0;
+      node._moveCount = 0;
     };
     node.removeEventListener(down, node._previousDownHandler);
     node.removeEventListener(move, node._previousMoveHandler);
