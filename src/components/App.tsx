@@ -1,6 +1,7 @@
 import * as React from "react"; // for expo
 import { FC, useState, useEffect } from "react";
 import { Dimensions } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 import Canvas from "./Canvas";
 
@@ -22,7 +23,13 @@ export const App: FC = () => {
       Dimensions.removeEventListener("change", onChange);
     };
   }, []);
-  return <Canvas width={dimensions.width} height={dimensions.height} />;
+  return (
+    <>
+      <Canvas width={dimensions.width} height={dimensions.height} />
+      {/* eslint-disable react/style-prop-object */}
+      <StatusBar style="dark" />
+    </>
+  );
 };
 
 export default App;
