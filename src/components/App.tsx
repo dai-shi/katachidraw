@@ -1,7 +1,6 @@
 import * as React from "react"; // for expo
 import { FC, useState, useEffect } from "react";
 import { Dimensions } from "react-native";
-import { Provider } from "jotai";
 
 import Canvas from "./Canvas";
 
@@ -23,11 +22,7 @@ export const App: FC = () => {
       Dimensions.removeEventListener("change", onChange);
     };
   }, []);
-  return (
-    <Provider>
-      <Canvas width={dimensions.width} height={dimensions.height} />
-    </Provider>
-  );
+  return <Canvas width={dimensions.width} height={dimensions.height} />;
 };
 
 export default App;

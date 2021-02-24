@@ -39,13 +39,12 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jotai": "^0.12.7",
+    "jotai": "^0.15.0",
     "perfect-freehand": "^0.2.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-native-svg": "^12.1.0",
-    "react-native-web": "^0.14.10",
-    "scheduler": "^0.20.1"
+    "react-native-web": "^0.14.10"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
