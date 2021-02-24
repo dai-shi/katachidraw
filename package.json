@@ -1,7 +1,7 @@
 {
   "name": "katachidraw",
   "description": "SVG based drawing tool and react-native component",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": "./dist/library.js",
+      "module": "./dist/library.js",
       "types": "./dist/library.d.ts"
     }
   },
@@ -39,13 +39,12 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jotai": "^0.12.7",
+    "jotai": "^0.15.0",
     "perfect-freehand": "^0.2.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-native-svg": "^12.1.0",
-    "react-native-web": "^0.14.10",
-    "scheduler": "^0.20.1"
+    "react-native-web": "^0.14.10"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
