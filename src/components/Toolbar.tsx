@@ -8,6 +8,7 @@ import ColorPicker from "../components/ColorPicker";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 import PenIcon from "../icons/Pen";
 import HandIcon from "../icons/Hand";
+import MoveIcon from "../icons/Move";
 import ZoomInIcon from "../icons/ZoomIn";
 import ZoomOutIcon from "../icons/ZoomOut";
 import PaletteIcon from "../icons/Palette";
@@ -17,8 +18,9 @@ import ImageIcon from "../icons/Image";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 
 const icons: Record<string, ReactElement> = {
-  pen: <PenIcon />,
-  hand: <HandIcon />,
+  draw: <PenIcon />,
+  pan: <HandIcon />,
+  move: <MoveIcon />,
   zoomIn: <ZoomInIcon />,
   zoomOut: <ZoomOutIcon />,
   color: <PaletteIcon />,

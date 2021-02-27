@@ -11,6 +11,6 @@ export const setColorAtom = atom(null, (get, set, color: string) => {
     });
   } else {
     set(colorAtom, color);
-    set(modeAtom, "pen");
+    set(modeAtom, "draw");
   }
 });

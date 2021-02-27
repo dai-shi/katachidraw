@@ -50,8 +50,8 @@ export const dragCanvasAtom = atom(
     const mode = get(modeAtom);
     const dragStart = get(dragCanvasStartAtom);
 
-    // pen mode
-    if (mode === "pen") {
+    // draw mode
+    if (mode === "draw") {
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {});
         set(addDotAtom, action.pos);
@@ -68,8 +68,8 @@ export const dragCanvasAtom = atom(
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
 
-    // hand mode with selection
-    if (mode === "hand" && selected.size) {
+    // move mode
+    if (mode === "move") {
       if (
         action.type === "start" &&
         !dragStart &&
@@ -119,8 +119,8 @@ export const dragCanvasAtom = atom(
       return;
     }
 
-    // hand mode without selection
-    if (mode === "hand" && !selected.size) {
+    // pan mode
+    if (mode === "pan") {
       if (action.type === "start" && !dragStart) {
         set(dragCanvasStartAtom, {
           canvas: {

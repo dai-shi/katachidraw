@@ -15,8 +15,10 @@ export const toolbarAtom = atom(
   (get) => {
     const mode = get(modeAtom);
     return [
-      { id: "hand", active: mode === "hand" },
-      { id: "pen", active: mode === "pen" },
+      mode === "move"
+        ? { id: "move", active: true }
+        : { id: "pan", active: mode === "pan" },
+      { id: "draw", active: mode === "draw" },
       { id: "erase", active: mode === "erase" },
       { id: "color", active: mode === "color" },
       { id: "zoomIn" },
@@ -30,7 +32,7 @@ export const toolbarAtom = atom(
     set,
     { id, fileSystemModule }: { id: string; fileSystemModule: FileSystemModule }
   ) => {
-    if (id === "hand" || id === "pen" || id === "erase") {
+    if (id === "pan" || id === "draw" || id === "erase") {
       set(modeAtom, id);
       set(clearSelectionAtom, null);
     } else if (id === "zoomIn" || id === "zoomOut") {

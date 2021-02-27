@@ -30,7 +30,7 @@ const ShapePath: React.FC<{
   return (
     <G
       transform={`translate(${shape.x} ${shape.y})`}
-      onStartShouldSetResponder={() => mode !== "pen"}
+      onStartShouldSetResponder={() => mode !== "draw"}
       onPress={() => {
         select(shapeAtom);
       }}

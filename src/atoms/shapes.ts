@@ -51,7 +51,7 @@ export const selectedAtom = atom((get) => get(selectedShapesAtom));
 
 export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   const mode = get(modeAtom);
-  if (mode === "pen") {
+  if (mode === "draw") {
     return;
   }
   const selected = get(selectedShapesAtom);
@@ -64,6 +64,9 @@ export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   } else {
     set(shapeAtom, (prev) => ({ ...prev, selected: true }));
     set(selectedShapesAtom, new Set(selected).add(shapeAtom));
+    if (mode === "pan") {
+      set(modeAtom, "move");
+    }
   }
 });
 
@@ -74,6 +77,12 @@ export const unselectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
     const nextSelected = new Set(selected);
     nextSelected.delete(shapeAtom);
     set(selectedShapesAtom, nextSelected);
+    if (!nextSelected.size) {
+      const mode = get(modeAtom);
+      if (mode === "move") {
+        set(modeAtom, "pan");
+      }
+    }
   }
 });
 
@@ -85,6 +94,10 @@ export const clearSelectionAtom = atom(null, (get, set) => {
     }
   });
   set(selectedShapesAtom, new Set());
+  const mode = get(modeAtom);
+  if (mode === "move") {
+    set(modeAtom, "pan");
+  }
 });
 
 export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
@@ -95,8 +108,8 @@ export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
 export const resetModeBasedOnSelection = atom(null, (get, set, _arg) => {
   const selected = get(selectedAtom);
   if (selected.size) {
-    set(modeAtom, "hand");
+    set(modeAtom, "move");
   } else {
-    set(modeAtom, "pen");
+    set(modeAtom, "draw");
   }
 });
