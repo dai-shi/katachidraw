@@ -5,6 +5,7 @@ import { modeAtom } from "./canvas";
 type TShapeCommon = {
   x: number;
   y: number;
+  scale: number;
   selected?: boolean;
 };
 
@@ -29,25 +30,29 @@ export const allShapesAtom = atom<ShapeAtom[]>([]);
 
 export const addShapePathAtom = atom(null, (get, set, path: string) => {
   const color = get(colorAtom);
-  const shapeAtom = atom({ path, color, x: 0, y: 0 } as TShape);
-  set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
+  // TODO adjust initial position with path modification
+  const shape: TShapePath = { x: 0, y: 0, scale: 1, path, color };
+  set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
 });
 
 export const addShapeImageAtom = atom(null, (get, set, image: string) => {
   // TODO nicer initial position and width
-  const shapeAtom = atom({
-    image,
+  const shape: TShapeImage = {
     x: 100,
     y: 100,
+    scale: 1,
+    image,
     width: 300,
     height: 300,
-  } as TShape);
-  set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
+  };
+  set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
 });
 
 const selectedShapesAtom = atom(new Set<ShapeAtom>());
 
 export const selectedAtom = atom((get) => get(selectedShapesAtom));
+
+export const hasSelectionAtom = atom((get) => !!get(selectedShapesAtom).size);
 
 export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   const mode = get(modeAtom);

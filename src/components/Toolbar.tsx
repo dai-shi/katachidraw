@@ -11,6 +11,8 @@ import HandIcon from "../icons/Hand";
 import MoveIcon from "../icons/Move";
 import ZoomInIcon from "../icons/ZoomIn";
 import ZoomOutIcon from "../icons/ZoomOut";
+import BiggerIcon from "../icons/Bigger";
+import SmallerIcon from "../icons/Smaller";
 import PaletteIcon from "../icons/Palette";
 import DeleteIcon from "../icons/Delete";
 import SaveIcon from "../icons/Save";
@@ -23,6 +25,8 @@ const icons: Record<string, ReactElement> = {
   move: <MoveIcon />,
   zoomIn: <ZoomInIcon />,
   zoomOut: <ZoomOutIcon />,
+  bigger: <BiggerIcon />,
+  smaller: <SmallerIcon />,
   color: <PaletteIcon />,
   erase: <DeleteIcon />,
   save: <SaveIcon />,

@@ -29,7 +29,7 @@ const ShapePath: React.FC<{
 
   return (
     <G
-      transform={`translate(${shape.x} ${shape.y})`}
+      transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
       onStartShouldSetResponder={() => mode !== "draw"}
       onPress={() => {
         select(shapeAtom);
@@ -85,7 +85,7 @@ const ShapeImage: React.FC<{
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
 
   return (
-    <G transform={`translate(${shape.x} ${shape.y})`}>
+    <G transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}>
       <G
         onPress={() => {
           select(shapeAtom);
