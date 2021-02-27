@@ -65,7 +65,7 @@ const ShapePath: React.FC<{
         fill="red"
         stroke="red"
         opacity={shape.selected ? 0.2 : 0}
-        strokeWidth="30"
+        strokeWidth={30 / shape.scale}
       />
       <Path
         d={shape.path}
@@ -83,6 +83,7 @@ const ShapeImage: React.FC<{
 }> = ({ shapeAtom, shape }) => {
   const [, select] = useAtom(selectAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
+  const handleSize = 12 / shape.scale;
 
   return (
     <G transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}>
@@ -101,14 +102,20 @@ const ShapeImage: React.FC<{
         }}
       >
         <Rect
-          x="-24"
-          y="-24"
-          width="36"
-          height="36"
+          x={-handleSize * 2}
+          y={-handleSize * 2}
+          width={handleSize * 3}
+          height={handleSize * 3}
           fill="red"
           opacity={shape.selected ? 0.2 : 0}
         />
-        <Rect x="-12" y="-12" width="12" height="12" fill="gray" />
+        <Rect
+          x={-handleSize}
+          y={-handleSize}
+          width={handleSize}
+          height={handleSize}
+          fill="gray"
+        />
       </G>
       <Image
         href={

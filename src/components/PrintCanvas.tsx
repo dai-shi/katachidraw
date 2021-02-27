@@ -17,7 +17,10 @@ type Props = {
 export const PrintCanvas: FC<Props> = ({ shapes }) => (
   <Svg xmlns="http://www.w3.org/2000/svg">
     {shapes.map((shape, index) => (
-      <G key={index} transform={`translate(${shape.x} ${shape.y})`}>
+      <G
+        key={index}
+        transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
+      >
         {"path" in shape && (
           <Path
             d={shape.path}
