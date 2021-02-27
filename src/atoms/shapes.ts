@@ -1,6 +1,7 @@
 import { atom, PrimitiveAtom } from "jotai";
 
 import { modeAtom } from "./canvas";
+import { adjustSvgPath } from "../utils/svgpath";
 
 type TShapeCommon = {
   x: number;
@@ -30,8 +31,7 @@ export const allShapesAtom = atom<ShapeAtom[]>([]);
 
 export const addShapePathAtom = atom(null, (get, set, path: string) => {
   const color = get(colorAtom);
-  // TODO adjust initial position with path modification
-  const shape: TShapePath = { x: 0, y: 0, scale: 1, path, color };
+  const shape: TShapePath = { ...adjustSvgPath(path), scale: 1, color };
   set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
 });
 

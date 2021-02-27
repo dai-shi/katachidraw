@@ -2541,6 +2541,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
 
+"@types/svg-path-bbox@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@types/svg-path-bbox/-/svg-path-bbox-0.2.0.tgz#6d748a58189d19c27d908e25ee580e1ee032d168"
+  integrity sha512-Axp5OYoaZg506CXAvMUBBfagim+zZVJumR7VEfN2YfaLGoPREoTC5ORSBFQnDkQTCUPqSarqXRxrDrK5T3+/tg==
+
 "@types/tapable@*", "@types/tapable@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.6.tgz#a9ca4b70a18b270ccb2bc0aaafefd1d486b7ea74"
@@ -13036,6 +13041,13 @@ svg-parser@^2.0.2:
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.4.tgz#fdc2e29e13951736140b76cb122c8ee6630eb6b5"
   integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
 
+svg-path-bbox@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/svg-path-bbox/-/svg-path-bbox-0.2.0.tgz#388c7e5889a6802c85b86605de43092fa8907076"
+  integrity sha512-ZW33BQS+XDkwNQ3z1XMTDceNhaiu3s+GUpuVbavgTHS8epw24OtmMorLXpG6q6S4imxhg1ZpCQ7nLwSPqUuMEg==
+  dependencies:
+    svgpath "^2.3.0"
+
 svgo@^1.0.0, svgo@^1.2.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-1.3.2.tgz#b6dc511c063346c9e415b81e43401145b96d4167"
@@ -13054,6 +13066,11 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+svgpath@^2.3.0, svgpath@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/svgpath/-/svgpath-2.3.1.tgz#b102334bebd2244b4818460ba2ebad52716a0d43"
+  integrity sha512-wNz6lCoj+99GMoyU7SozTfPqiLHz6WcJYZ30Z+F4lF/gPtxWHBCpZ4DhoDI0+oZ0dObKyYsJdSPGbL2mJq/qCg==
 
 symbol-observable@1.0.1:
   version "1.0.1"
