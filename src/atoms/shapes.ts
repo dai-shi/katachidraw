@@ -1,7 +1,6 @@
 import { atom, PrimitiveAtom } from "jotai";
 
 import { modeAtom } from "./canvas";
-import { saveHistoryAtom } from "./history";
 import { adjustSvgPath } from "../utils/svgpath";
 
 type TShapeCommon = {
@@ -34,7 +33,6 @@ export const addShapePathAtom = atom(null, (get, set, path: string) => {
   const color = get(colorAtom);
   const shape: TShapePath = { ...adjustSvgPath(path), scale: 1, color };
   set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
-  set(saveHistoryAtom, null);
 });
 
 export const addShapeImageAtom = atom(null, (get, set, image: string) => {
@@ -48,7 +46,6 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
     height: 300,
   };
   set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
-  set(saveHistoryAtom, null);
 });
 
 const selectedShapesAtom = atom(new Set<ShapeAtom>());

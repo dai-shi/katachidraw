@@ -9,6 +9,7 @@ import {
   allShapesAtom,
   addShapeImageAtom,
 } from "./shapes";
+import { saveHistoryAtom } from "./history";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 import { serialize } from "../utils/serialize";
 import { PrintCanvas } from "../components/PrintCanvas";
@@ -61,6 +62,7 @@ export const toolbarAtom = atom(
           };
         });
       });
+      set(saveHistoryAtom, null);
     } else if (id === "zoomIn" || id === "zoomOut") {
       const dimension = get(dimensionAtom);
       const zoom = get(zoomAtom);
@@ -82,9 +84,10 @@ export const toolbarAtom = atom(
     } else if (id === "image") {
       fileSystemModule.loadImageFile().then((image) => {
         set(addShapeImageAtom, image);
+        set(saveHistoryAtom, null);
       });
     } else if (id === "save") {
-      const shapes = get(allShapesAtom).map((shapeAtom) => get(shapeAtom));
+      const shapes = get(allShapesAtom).map(get);
       const svgString = serialize(PrintCanvas({ shapes }));
       fileSystemModule.saveSvgFile(svgString);
     }

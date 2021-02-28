@@ -10,6 +10,7 @@ import {
   deleteShapeAtom,
   resetModeBasedOnSelection,
 } from "./shapes";
+import { saveHistoryAtom } from "./history";
 
 const pressingShapeAtom = atom<ShapeAtom | null>(null);
 export const setPressingShapeAtom = atom(
@@ -105,6 +106,9 @@ export const dragCanvasAtom = atom(
           dragged: true,
         });
       } else if (action.type === "end" && dragStart) {
+        if (dragStart.dragged) {
+          set(saveHistoryAtom, null);
+        }
         if (
           (!dragStart.dragged ||
             performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) <
