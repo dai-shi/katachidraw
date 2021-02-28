@@ -26,6 +26,7 @@ const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
   dragged?: boolean;
+  erased?: boolean;
   hasPressingShape?: boolean;
   startTime?: number;
 } | null>(null);
@@ -160,9 +161,16 @@ export const dragCanvasAtom = atom(
           const isPointInShape = isPointInShapeMap?.get(shapeAtom);
           if (isPointInShape && isPointInShape(action.pos, offset, zoom)) {
             set(deleteShapeAtom, shapeAtom);
+            set(dragCanvasStartAtom, {
+              ...dragStart,
+              erased: true,
+            });
           }
         });
       } else if (action.type === "end" && dragStart) {
+        if (dragStart.erased) {
+          set(saveHistoryAtom, null);
+        }
         set(dragCanvasStartAtom, null);
       }
       return;

@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import type { Getter, Setter } from "jotai/core/types";
 
 import type { TShape } from "./shapes";
-import { allShapesAtom } from "./shapes";
+import { allShapesAtom, clearSelectionAtom } from "./shapes";
 
 type HistoryItem = {
   shapes: TShape[];
@@ -28,7 +28,13 @@ export const saveHistoryAtom = atom(null, (get, set, _arg) => {
   // remove uncommitted
   history = history.slice(index); // copy array immutably
   // add current shapes
-  const shapes: TShape[] = get(allShapesAtom).map(get);
+  const shapes: TShape[] = get(allShapesAtom).map((shapeAtom) => {
+    const shape = get(shapeAtom);
+    if (shape.selected) {
+      return { ...shape, selected: false };
+    }
+    return shape;
+  });
   history.unshift({ shapes }); // mutate array
   set(historyAtom, history);
   set(historyIndexAtom, 0);
@@ -48,6 +54,7 @@ export const hisotryBackAtom = atom(null, (get, set, _arg) => {
     index += 1;
     set(historyIndexAtom, index);
     restoreHistory(get, set);
+    set(clearSelectionAtom, null);
   }
 });
 
@@ -57,5 +64,6 @@ export const hisotryForwardAtom = atom(null, (get, set, _arg) => {
     index -= 1;
     set(historyIndexAtom, index);
     restoreHistory(get, set);
+    set(clearSelectionAtom, null);
   }
 });
