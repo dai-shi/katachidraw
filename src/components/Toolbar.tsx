@@ -33,18 +33,18 @@ const icons: Record<string, ReactElement> = {
   image: <ImageIcon />,
 };
 
-const left = 0;
-const top = 0;
-const size = 36;
-const margin = 8;
-const radius = 6;
-
 type Props = {
+  size?: number;
+  margin?: number;
+  radius?: number;
   ColorPickerElement?: ReactElement;
   fileSystemModule: FileSystemModule;
 };
 
 export const Toolbar: FC<Props> = ({
+  size = 36,
+  margin = 8,
+  radius = 6,
   ColorPickerElement = <ColorPicker />,
   fileSystemModule,
 }) => {
@@ -52,8 +52,8 @@ export const Toolbar: FC<Props> = ({
   return (
     <>
       <Rect
-        x={left}
-        y={top}
+        x={0}
+        y={0}
         rx={radius}
         ry={radius}
         width={size + margin * 2}
@@ -70,8 +70,8 @@ export const Toolbar: FC<Props> = ({
           ref={hackTouchableNode}
         >
           <Rect
-            x={left + margin}
-            y={top + margin + (size + margin) * i}
+            x={margin}
+            y={margin + (size + margin) * i}
             rx={radius}
             ry={radius}
             width={size}
@@ -82,8 +82,8 @@ export const Toolbar: FC<Props> = ({
             opacity="0.8"
           />
           <G
-            x={left + margin + (size - 24) / 2}
-            y={top + margin + (size + margin) * i + (size - 24) / 2}
+            x={margin + (size - 24) / 2}
+            y={margin + (size + margin) * i + (size - 24) / 2}
             fill="#444"
           >
             {icons[tool.id]}
@@ -92,7 +92,7 @@ export const Toolbar: FC<Props> = ({
       ))}
       <G
         id="colorpicker"
-        transform={`translate(${left + size + margin * 3} ${top + margin})`}
+        transform={`translate(${size + margin * 3} ${margin})`}
       >
         {ColorPickerElement}
       </G>

@@ -8,25 +8,30 @@ import { dragCanvasAtom } from "../atoms/drag";
 import Shapes from "./Shapes";
 import Dots from "./Dots";
 import Toolbar from "./Toolbar";
+import Slider from "./Slider";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 import { FileSystem } from "../modules/file-system/FileSystem";
 
 type Props = {
   width: number;
   height: number;
-  toolbarPosition?: readonly [number, number];
   ShapesElement?: ReactElement;
   DotsElement?: ReactElement;
+  toolbarPosition?: readonly [number, number];
   ToolbarElement?: ReactElement;
+  sliderPosition?: readonly [number, number];
+  SliderElement?: ReactElement;
 };
 
 export const Canvas: FC<Props> = ({
   width,
   height,
-  toolbarPosition = [5, 50],
   ShapesElement = <Shapes />,
   DotsElement = <Dots />,
+  toolbarPosition = [5, 50],
   ToolbarElement = <Toolbar fileSystemModule={FileSystem} />,
+  sliderPosition = [-(width * 0.75) - 10, -40 - 10],
+  SliderElement = <Slider width={width * 0.75} />,
 }) => {
   const [, setDimension] = useAtom(dimensionAtom);
   useEffect(() => {
@@ -82,6 +87,20 @@ export const Canvas: FC<Props> = ({
         ref={hackTouchableNode}
       >
         {ToolbarElement}
+      </G>
+      <G
+        id="slider"
+        transform={`translate(${
+          offset.x + (width + sliderPosition[0]) / zoom
+        } ${offset.y + (height + sliderPosition[1]) / zoom}) scale(${
+          1 / zoom
+        })`}
+        onPressIn={(e) => {
+          e.stopPropagation();
+        }}
+        ref={hackTouchableNode}
+      >
+        {SliderElement}
       </G>
     </Svg>
   );

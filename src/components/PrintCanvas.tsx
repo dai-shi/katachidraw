@@ -2,7 +2,7 @@ import * as React from "react"; // for expo
 import { FC, ComponentType, ComponentProps } from "react";
 import SvgOrig, { G, Path, Image } from "react-native-svg";
 
-import { TShape } from "../atoms/shapes";
+import type { TShape } from "../atoms/shapes";
 
 const Svg = (SvgOrig as unknown) as ComponentType<
   ComponentProps<SvgOrig> & {
