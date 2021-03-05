@@ -21,14 +21,7 @@ export const PrintCanvas: FC<Props> = ({ shapes }) => (
         key={index}
         transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
       >
-        {"path" in shape && (
-          <Path
-            d={shape.path}
-            fill={shape.color}
-            stroke={shape.color}
-            strokeWidth="2"
-          />
-        )}
+        {"path" in shape && <Path d={shape.path} fill={shape.color} />}
         {"image" in shape && (
           <Image
             href={shape.image as any}

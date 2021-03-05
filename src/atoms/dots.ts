@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import getPath from "perfect-freehand";
+import { getFreehandPath } from "../utils/svgpath";
 
 import { offsetAtom, zoomAtom } from "./canvas";
 import { addShapePathAtom } from "./shapes";
@@ -20,7 +20,7 @@ export const addDotAtom = atom(
 export const commitDotsAtom = atom(null, (get, set) => {
   const dots = get(dotsAtom);
   if (dots.length > 2) {
-    const path = getPath(dots);
+    const path = getFreehandPath(dots);
     set(addShapePathAtom, path);
     set(saveHistoryAtom, null);
   }

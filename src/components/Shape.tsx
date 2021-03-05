@@ -67,12 +67,7 @@ const ShapePath: React.FC<{
         opacity={shape.selected ? 0.2 : 0}
         strokeWidth={30 / shape.scale}
       />
-      <Path
-        d={shape.path}
-        fill={shape.color}
-        stroke={shape.color}
-        strokeWidth="2"
-      />
+      <Path d={shape.path} fill={shape.color} />
     </G>
   );
 };
