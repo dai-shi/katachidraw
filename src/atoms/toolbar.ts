@@ -88,7 +88,7 @@ export const toolbarAtom = atom(
         if ("image" in prev) {
           const { rotate } = prev;
           const nextRotate =
-            (rotate + 15 * (id === "rotateLeft" ? -1 : 1)) % 360;
+            (356 + rotate + 15 * (id === "rotateLeft" ? -1 : 1)) % 360;
           set(shapeAtom, {
             ...prev,
             rotate: nextRotate,
