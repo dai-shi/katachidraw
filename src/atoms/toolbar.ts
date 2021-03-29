@@ -3,6 +3,8 @@ import { atom } from "jotai";
 import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
 import {
   selectedAtom,
+  hasSelectionAtom,
+  hasImageOnlySelectionAtom,
   clearSelectionAtom,
   resetModeBasedOnSelection,
   allShapesAtom,
@@ -16,11 +18,8 @@ import { PrintCanvas } from "../components/PrintCanvas";
 export const toolbarAtom = atom(
   (get) => {
     const mode = get(modeAtom);
-    const selected = get(selectedAtom);
-    const hasSelection = !!selected.size;
-    const isSelectionImages = [...selected].every(
-      (shape) => "image" in get(shape)
-    );
+    const hasSelection = get(hasSelectionAtom);
+    const hasImageOnlySelection = get(hasImageOnlySelectionAtom);
     return [
       hasSelection
         ? { id: "move", active: mode === "move" }
@@ -30,7 +29,7 @@ export const toolbarAtom = atom(
       { id: "color", active: mode === "color" },
       hasSelection ? { id: "bigger" } : { id: "zoomIn" },
       hasSelection ? { id: "smaller" } : { id: "zoomOut" },
-      ...(hasSelection && isSelectionImages
+      ...(hasImageOnlySelection
         ? [{ id: "rotateLeft" }, { id: "rotateRight" }]
         : []),
       { id: "image" },
@@ -99,6 +98,9 @@ export const toolbarAtom = atom(
       if (get(modeAtom) === "color") {
         set(resetModeBasedOnSelection, null);
       } else {
+        if (get(hasImageOnlySelectionAtom)) {
+          set(clearSelectionAtom, null);
+        }
         set(modeAtom, "color");
       }
     } else if (id === "image") {

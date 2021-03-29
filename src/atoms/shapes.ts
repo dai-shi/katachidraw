@@ -59,6 +59,15 @@ const selectedShapesAtom = atom(new Set<ShapeAtom>());
 
 export const selectedAtom = atom((get) => get(selectedShapesAtom));
 
+export const hasSelectionAtom = atom((get) => !!get(selectedShapesAtom).size);
+
+export const hasImageOnlySelectionAtom = atom((get) => {
+  const selected = get(selectedShapesAtom);
+  return (
+    !!selected.size && [...selected].every((shape) => "image" in get(shape))
+  );
+});
+
 export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   const mode = get(modeAtom);
   if (mode === "draw") {
