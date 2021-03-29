@@ -47,7 +47,12 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
     height: 300,
     rotate: 0,
   };
-  set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
+  const shapeAtom = atom(shape) as ShapeAtom;
+  set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
+  if (get(modeAtom) === "draw") {
+    set(modeAtom, "pan");
+  }
+  set(selectAtom, shapeAtom);
 });
 
 const selectedShapesAtom = atom(new Set<ShapeAtom>());
