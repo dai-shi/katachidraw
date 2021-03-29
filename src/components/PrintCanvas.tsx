@@ -19,7 +19,11 @@ export const PrintCanvas: FC<Props> = ({ shapes }) => (
     {shapes.map((shape, index) => (
       <G
         key={index}
-        transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
+        transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})${
+          "image" in shape
+            ? ` rotate(${shape.rotate} ${shape.width / 2} ${shape.height / 2})`
+            : ""
+        }`}
       >
         {"path" in shape && <Path d={shape.path} fill={shape.color} />}
         {"image" in shape && (

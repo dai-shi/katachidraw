@@ -81,7 +81,11 @@ const ShapeImage: React.FC<{
   const handleSize = 12 / shape.scale;
 
   return (
-    <G transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}>
+    <G
+      transform={`translate(${shape.x} ${shape.y}) scale(${
+        shape.scale
+      }) rotate(${shape.rotate} ${shape.width / 2} ${shape.height / 2})`}
+    >
       <G
         onPress={() => {
           select(shapeAtom);

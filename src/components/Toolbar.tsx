@@ -13,6 +13,8 @@ import ZoomInIcon from "../icons/ZoomIn";
 import ZoomOutIcon from "../icons/ZoomOut";
 import BiggerIcon from "../icons/Bigger";
 import SmallerIcon from "../icons/Smaller";
+import RotateLeftIcon from "../icons/RotateLeft";
+import RotateRightIcon from "../icons/RotateRight";
 import PaletteIcon from "../icons/Palette";
 import DeleteIcon from "../icons/Delete";
 import SaveIcon from "../icons/Save";
@@ -27,6 +29,8 @@ const icons: Record<string, ReactElement> = {
   zoomOut: <ZoomOutIcon />,
   bigger: <BiggerIcon />,
   smaller: <SmallerIcon />,
+  rotateLeft: <RotateLeftIcon />,
+  rotateRight: <RotateRightIcon />,
   color: <PaletteIcon />,
   erase: <DeleteIcon />,
   save: <SaveIcon />,
