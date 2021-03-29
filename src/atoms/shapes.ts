@@ -19,6 +19,7 @@ export type TShapeImage = TShapeCommon & {
   image: string;
   width: number;
   height: number;
+  rotate: number;
 };
 
 export type TShape = TShapePath | TShapeImage;
@@ -44,6 +45,7 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
     image,
     width: 300,
     height: 300,
+    rotate: 0,
   };
   set(allShapesAtom, [...get(allShapesAtom), atom(shape) as ShapeAtom]);
 });
@@ -51,8 +53,6 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
 const selectedShapesAtom = atom(new Set<ShapeAtom>());
 
 export const selectedAtom = atom((get) => get(selectedShapesAtom));
-
-export const hasSelectionAtom = atom((get) => !!get(selectedShapesAtom).size);
 
 export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   const mode = get(modeAtom);

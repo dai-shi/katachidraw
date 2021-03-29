@@ -2,7 +2,6 @@ import { atom } from "jotai";
 
 import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
 import {
-  hasSelectionAtom,
   selectedAtom,
   clearSelectionAtom,
   resetModeBasedOnSelection,
@@ -17,7 +16,11 @@ import { PrintCanvas } from "../components/PrintCanvas";
 export const toolbarAtom = atom(
   (get) => {
     const mode = get(modeAtom);
-    const hasSelection = get(hasSelectionAtom);
+    const selected = get(selectedAtom);
+    const hasSelection = !!selected.size;
+    const isSelectionImages = [...selected].every(
+      (shape) => "image" in get(shape)
+    );
     return [
       hasSelection
         ? { id: "move", active: mode === "move" }
@@ -27,6 +30,9 @@ export const toolbarAtom = atom(
       { id: "color", active: mode === "color" },
       hasSelection ? { id: "bigger" } : { id: "zoomIn" },
       hasSelection ? { id: "smaller" } : { id: "zoomOut" },
+      ...(hasSelection && isSelectionImages
+        ? [{ id: "rotateLeft" }, { id: "rotateRight" }]
+        : []),
       { id: "image" },
       { id: "save" },
     ];
@@ -75,6 +81,20 @@ export const toolbarAtom = atom(
       if (get(modeAtom) === "color") {
         set(resetModeBasedOnSelection, null);
       }
+    } else if (id === "rotateLeft" || id === "rotateRight") {
+      const selected = get(selectedAtom);
+      selected.forEach((shapeAtom) => {
+        const prev = get(shapeAtom);
+        if ("image" in prev) {
+          const { rotate } = prev;
+          const nextRotate =
+            (rotate + 15 * (id === "rotateLeft" ? -1 : 1)) % 360;
+          set(shapeAtom, {
+            ...prev,
+            rotate: nextRotate,
+          });
+        }
+      });
     } else if (id === "color") {
       if (get(modeAtom) === "color") {
         set(resetModeBasedOnSelection, null);
