@@ -1,12 +1,12 @@
 import * as React from "react"; // for expo
 import { FC, memo } from "react";
 import { Circle } from "react-native-svg";
-import { useAtom } from "jotai";
 
-import { dotsAtom } from "../atoms/dots";
+type Props = {
+  dots: [];
+};
 
-export const Dots: FC = () => {
-  const [dots] = useAtom(dotsAtom);
+export const Dots: FC<Props> = ({ dots }) => {
   return (
     <>
       {dots.map((dot, index) => (

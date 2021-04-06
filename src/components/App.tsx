@@ -1,9 +1,15 @@
-import * as React from "react"; // for expo
-import { FC, useState, useEffect } from "react";
-import { Dimensions } from "react-native";
+import { inspect } from "@xstate/inspect";
 import { StatusBar } from "expo-status-bar";
-
+import * as React from "react"; // for expo
+import { FC, useEffect, useState } from "react";
+import { Dimensions } from "react-native";
 import Canvas from "./Canvas";
+
+process.env.NODE_ENV === "development" &&
+  inspect({
+    url: "https://statecharts.io/inspect",
+    iframe: false,
+  });
 
 export const App: FC = () => {
   const [dimensions, setDimensions] = useState<{

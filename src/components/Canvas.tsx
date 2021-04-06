@@ -1,46 +1,44 @@
+import { useInterpret, useSelector } from "@xstate/react";
 import * as React from "react"; // for expo
 import { FC, ReactElement, useEffect } from "react";
-import Svg, { Rect, G } from "react-native-svg";
-import { useAtom } from "jotai";
-
-import { dimensionAtom, offsetAtom, zoomAtom } from "../atoms/canvas";
-import { dragCanvasAtom } from "../atoms/drag";
-import Shapes from "./Shapes";
-import Dots from "./Dots";
-import Toolbar from "./Toolbar";
-import Slider from "./Slider";
-import { hackTouchableNode } from "../utils/touchHandlerHack";
+import Svg, { G, Rect } from "react-native-svg";
+import CanvasMachine from "../machines/CanvasMachine";
 import { FileSystem } from "../modules/file-system/FileSystem";
+import { hackTouchableNode } from "../utils/touchHandlerHack";
+import Dots from "./Dots";
+import Shapes from "./Shapes";
+import Slider from "./Slider";
+import Toolbar from "./Toolbar";
 
 type Props = {
   width: number;
   height: number;
-  ShapesElement?: ReactElement;
-  DotsElement?: ReactElement;
   toolbarPosition?: readonly [number, number];
-  ToolbarElement?: ReactElement;
   sliderPosition?: readonly [number, number];
   SliderElement?: ReactElement;
 };
 
+const selectShapes = (state: any) => state.context.shapes;
+const selectDots = (state: any) => state.context.dots;
+const selectOffset = (state: any) => state.context.offset;
+const selectZoom = (state: any) => state.context.zoom;
+
 export const Canvas: FC<Props> = ({
   width,
   height,
-  ShapesElement = <Shapes />,
-  DotsElement = <Dots />,
   toolbarPosition = [5, 50],
-  ToolbarElement = <Toolbar fileSystemModule={FileSystem} />,
   sliderPosition = [-(width * 0.75) - 10, -40 - 10],
   SliderElement = <Slider width={width * 0.75} />,
 }) => {
-  const [, setDimension] = useAtom(dimensionAtom);
-  useEffect(() => {
-    setDimension({ width, height });
-  }, [setDimension, width, height]);
+  const service = useInterpret(CanvasMachine, { devTools: true });
+  const shapes = useSelector(service, selectShapes) || {};
+  const dots = useSelector(service, selectDots);
+  const offset = useSelector(service, selectOffset);
+  const zoom = useSelector(service, selectZoom);
 
-  const [offset] = useAtom(offsetAtom);
-  const [zoom] = useAtom(zoomAtom);
-  const [, drag] = useAtom(dragCanvasAtom);
+  useEffect(() => {
+    service.send({ type: "SET_DIMENSIONS", width, height });
+  }, [width, height]);
 
   return (
     <Svg viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}>
@@ -49,20 +47,14 @@ export const Canvas: FC<Props> = ({
         onMoveShouldSetResponderCapture={() => true}
         onResponderGrant={(e) => {
           const { locationX, locationY } = e.nativeEvent;
-          drag({
-            type: "start",
-            pos: [locationX, locationY],
-          });
+          service.send({ type: "START_DRAG", pos: [locationX, locationY] });
         }}
         onResponderMove={(e) => {
           const { locationX, locationY } = e.nativeEvent;
-          drag({
-            type: "move",
-            pos: [locationX, locationY],
-          });
+          service.send({ type: "DRAG" as any, pos: [locationX, locationY] });
         }}
         onResponderEnd={() => {
-          drag({ type: "end" });
+          service.send({ type: "END_DRAG" });
         }}
         ref={hackTouchableNode}
       >
@@ -73,8 +65,8 @@ export const Canvas: FC<Props> = ({
           height={height / zoom}
           opacity="0"
         />
-        {ShapesElement}
-        {DotsElement}
+        <Shapes shapes={shapes} />
+        <Dots dots={dots} />
       </G>
       <G
         id="toolbar"
@@ -86,7 +78,7 @@ export const Canvas: FC<Props> = ({
         }}
         ref={hackTouchableNode}
       >
-        {ToolbarElement}
+        <Toolbar service={service} fileSystemModule={FileSystem} />
       </G>
       <G
         id="slider"

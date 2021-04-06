@@ -1,17 +1,16 @@
 import * as React from "react"; // for expo
 import { FC, memo } from "react";
-import { useAtom } from "jotai";
-
-import { allShapesAtom, selectedAtom } from "../atoms/shapes";
 import Shape from "./Shape";
 
-export const Shapes: FC = () => {
-  const [shapeAtomList] = useAtom(allShapesAtom);
-  useAtom(selectedAtom); // to initialize the derived atom (Hmmm)
+type Props = {
+  shapes: any;
+};
+
+export const Shapes: FC<Props> = ({ shapes }) => {
   return (
     <>
-      {shapeAtomList.map((shapeAtom) => (
-        <Shape key={`${shapeAtom}`} shapeAtom={shapeAtom} />
+      {Object.keys(shapes).map((id: any) => (
+        <Shape key={id} service={shapes[id].ref} type={shapes[id].type} />
       ))}
     </>
   );
