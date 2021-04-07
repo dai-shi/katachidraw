@@ -1,11 +1,9 @@
 import { useService } from "@xstate/react";
-import { useAtom } from "jotai";
 import * as React from "react"; // for expo
 import { FC, memo } from "react";
 import { Platform } from "react-native";
 import { G, Image, Path, Rect } from "react-native-svg";
-import { IsPointInShape, setPressingShapeAtom } from "../atoms/drag";
-import { ShapeAtom, TShapeImage, TShapePath } from "../atoms/shapes";
+import { IsPointInShape } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 const ShapePath: React.FC<{
@@ -14,7 +12,7 @@ const ShapePath: React.FC<{
   const [state, send] = useService<any, any, any>(service);
   const ref = React.useRef(null);
   const selected = state.matches("selected");
-  const { x, y, scale, path, color, id } = state.context;
+  const { x, y, scale, path, color } = state.context;
 
   React.useEffect(() => {
     const instance: any = ref.current;

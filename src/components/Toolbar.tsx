@@ -18,16 +18,15 @@ import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 const getIcons = (stateValue: any) => [
-  stateValue.selection === "selection"
+  stateValue.selection === "shapeSelected"
     ? {
         id: "move",
         component: MoveIcon,
-        eventType: "SELECT_MOVE",
+        eventType: "SELECT_PAN",
         active: stateValue.mode.pan,
       }
     : {
         id: "pan",
-        PannerNode,
         component: HandIcon,
         eventType: "SELECT_PAN",
         active: stateValue.mode.pan,

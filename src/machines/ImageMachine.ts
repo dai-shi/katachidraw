@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate";
-import { pure, sendParent } from "xstate/lib/actions";
+import { sendParent } from "xstate/lib/actions";
 
 type ShapeEvent =
   | { type: "BIGGER"; top: number; left: number }

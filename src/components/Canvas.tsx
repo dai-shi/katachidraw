@@ -38,7 +38,7 @@ export const Canvas: FC<Props> = ({
 
   useEffect(() => {
     service.send({ type: "SET_DIMENSIONS", width, height });
-  }, [width, height]);
+  }, [width, height, service]);
 
   return (
     <Svg viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}>

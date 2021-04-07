@@ -16,7 +16,6 @@ type CanvasEvent =
   | { type: "SELECT_COLOR" }
   | { type: "SELECT_PAN" }
   | { type: "SELECT_DRAW" }
-  | { type: "SELECT_MOVE" }
   | { type: "SELECT_ERASE" }
   | { type: "POINT_IS_IN_SHAPE"; id: string }
   | { type: "ZOOM_IN" }
@@ -235,9 +234,6 @@ const CanvasMachine = createMachine<CanvasContext, CanvasEvent>(
         on: {
           SELECT_DRAW: {
             target: "#canvas.mode.draw",
-          },
-          SELECT_MOVE: {
-            // target: "move",
           },
           SELECT_ERASE: {
             target: "#canvas.mode.erase",
