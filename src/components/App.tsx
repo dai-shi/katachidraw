@@ -5,11 +5,10 @@ import { FC, useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import Canvas from "./Canvas";
 
-process.env.NODE_ENV === "development" &&
-  inspect({
-    url: "https://statecharts.io/inspect",
-    iframe: false,
-  });
+inspect({
+  url: "https://statecharts.io/inspect",
+  iframe: false,
+});
 
 export const App: FC = () => {
   const [dimensions, setDimensions] = useState<{
