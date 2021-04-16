@@ -2886,9 +2886,9 @@
     fast-safe-stringify "^2.0.7"
 
 "@xstate/react@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@xstate/react/-/react-1.3.1.tgz#5794e1c7d2bc70759b5dc2c9ccc9ddaa6e68e98a"
-  integrity sha512-wgAHr4tWVQQwH6dIQTcZQYGLXiK9V8gMqMxOWyiLQzoKchqXFfb0LlCcw0FAc4jmpuGHSFSk6fAXjEpFpV+Jxw==
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@xstate/react/-/react-1.3.2.tgz#1fd7a7e26565a1d18193413c327a06d2038c8a51"
+  integrity sha512-wobnkgt3ewhzb7McW8kxMXmup/MeSyHOhgWryy0RU7x+q/m1RAS8GMjGn3YTPf2XI17AzB98a131zNdOe1lwIA==
   dependencies:
     use-isomorphic-layout-effect "^1.0.0"
     use-subscription "^1.3.0"
@@ -14461,9 +14461,9 @@ xpipe@^1.0.5:
   integrity sha1-jdi/Rfw/f1Xw4FS4ePQ6YmFNr98=
 
 xstate@^4.16.2:
-  version "4.16.2"
-  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.16.2.tgz#d6b973b1253b8c85f50f68601837287d59d4bf34"
-  integrity sha512-EY39NNZnwM4tRYNmQAi1c2qHuZ1lJmuDpEo1jxiRcfS+1jPtKRAjGRLNx3fYKcK0ohW6mL41Wze3mdCF0SqavA==
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.18.0.tgz#64a0002cc7deca1cb1891f002bbe786193e97497"
+  integrity sha512-cjj22XXxTWIkMrghyoUWjUlDFcd7MQGeKYy8bkdtcIeogZjF98mep9CHv8xLO3j4PZQF5qgcAGGT8FUn99mF1Q==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

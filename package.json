@@ -39,7 +39,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xstate/react": "^1.3.1",
+    "@xstate/react": "^1.3.2",
     "jotai": "^0.15.0",
     "perfect-freehand": "^0.2.3",
     "react": "^17.0.1",
@@ -49,7 +49,7 @@
     "svg-path-bbox": "^0.2.0",
     "svgpath": "^2.3.1",
     "uuid": "^8.3.2",
-    "xstate": "^4.16.2"
+    "xstate": "4.18.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.9",
