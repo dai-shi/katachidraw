@@ -3,7 +3,14 @@ import SvgPath from "svgpath";
 import { svgPathBbox } from "svg-path-bbox";
 
 export const getFreehandPath = (points: number[][]) => {
-  const stroke = getStroke(points);
+  const stroke = getStroke(points, {
+    start: {
+      taper: 6,
+    },
+    end: {
+      taper: 1,
+    },
+  });
   const d = [];
   let [p0, p1] = stroke;
   d.push(`M ${p0[0]} ${p0[1]} Q`);
