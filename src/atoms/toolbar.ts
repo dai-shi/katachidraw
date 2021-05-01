@@ -109,7 +109,7 @@ export const toolbarAtom = atom(
         set(saveHistoryAtom, null);
       });
     } else if (id === "save") {
-      const shapes = get(allShapesAtom).map(get);
+      const shapes = get(allShapesAtom).map((shapeAtom) => get(shapeAtom));
       const svgString = serialize(PrintCanvas({ shapes }));
       fileSystemModule.saveSvgFile(svgString);
     }
