@@ -44,4 +44,4 @@ the development in [our Discord server](https://discord.gg/MrQdmzd).
 
 Feel free to use the library under the MIT license.
 If you find bugs, please file issues.
-Pull requests are also welcome and there are some issues are filed for a start.
+Pull requests are also welcome and there are some issues filed for a start.
