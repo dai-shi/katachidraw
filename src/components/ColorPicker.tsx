@@ -25,21 +25,23 @@ export const ColorPicker: FC = () => {
         onPress={() => setColor("black")}
         ref={hackTouchableNode}
       />
-      {([
-        "gray",
-        "red",
-        "pink",
-        "grape",
-        "violet",
-        "indigo",
-        "blue",
-        "cyan",
-        "teal",
-        "green",
-        "lime",
-        "yellow",
-        "orange",
-      ] as const).map((colorName, index) =>
+      {(
+        [
+          "gray",
+          "red",
+          "pink",
+          "grape",
+          "violet",
+          "indigo",
+          "blue",
+          "cyan",
+          "teal",
+          "green",
+          "lime",
+          "yellow",
+          "orange",
+        ] as const
+      ).map((colorName, index) =>
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((colorIndex) => (
           <Rect
             key={`${colorName}-${colorIndex}`}
