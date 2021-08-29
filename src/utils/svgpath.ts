@@ -1,6 +1,6 @@
 import getStroke from "perfect-freehand";
 import SvgPath from "svgpath";
-import { svgPathBbox } from "svg-path-bbox";
+import svgPathBbox from "svg-path-bbox";
 
 export const getFreehandPath = (points: number[][]) => {
   const stroke = getStroke(points, {

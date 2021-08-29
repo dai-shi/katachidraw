@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import type { Getter, Setter } from "jotai/core/types";
+import type { Getter, Setter } from "jotai";
 
 import type { TShape } from "./shapes";
 import { allShapesAtom, clearSelectionAtom } from "./shapes";
