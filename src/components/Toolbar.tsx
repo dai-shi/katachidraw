@@ -68,7 +68,7 @@ export const Toolbar: FC<Props> = ({
       {tools.map((tool, i) => (
         <G
           key={tool.id}
-          onPress={() => {
+          onPressIn={() => {
             dispatch({ id: tool.id, fileSystemModule });
           }}
           ref={hackTouchableNode}
