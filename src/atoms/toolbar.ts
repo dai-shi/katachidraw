@@ -18,7 +18,7 @@ import { PrintCanvas } from "../components/PrintCanvas";
 
 export const toolbarAtom = atom(
   (get) => {
-    get(modeMachineAtom)
+    get(modeMachineAtom);
     const mode = get(modeAtom);
     const hasSelection = get(hasSelectionAtom);
     const hasImageOnlySelection = get(hasImageOnlySelectionAtom);
