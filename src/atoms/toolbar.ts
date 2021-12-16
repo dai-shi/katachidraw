@@ -10,6 +10,7 @@ import {
   allShapesAtom,
   addShapeImageAtom,
 } from "./shapes";
+import { modeMachineAtom } from "./modeMachine";
 import { saveHistoryAtom } from "./history";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 import { serialize } from "../utils/serialize";
@@ -17,6 +18,7 @@ import { PrintCanvas } from "../components/PrintCanvas";
 
 export const toolbarAtom = atom(
   (get) => {
+    get(modeMachineAtom);
     const mode = get(modeAtom);
     const hasSelection = get(hasSelectionAtom);
     const hasImageOnlySelection = get(hasImageOnlySelectionAtom);
@@ -41,6 +43,18 @@ export const toolbarAtom = atom(
     set,
     { id, fileSystemModule }: { id: string; fileSystemModule: FileSystemModule }
   ) => {
+    if (id === "pan") {
+      set(modeMachineAtom, "SELECT_PAN_MODE");
+    } else if (id === "move") {
+      set(modeMachineAtom, "SELECT_MOVE_MODE");
+    } else if (id === "draw") {
+      set(modeMachineAtom, "SELECT_DRAW_MODE");
+    } else if (id === "erase") {
+      set(modeMachineAtom, "SELECT_ERASE_MODE");
+    } else if (id === "color") {
+      set(modeMachineAtom, "SELECT_COLOR_MODE");
+    }
+
     if (id === "pan" || id === "draw" || id === "erase") {
       set(modeAtom, id);
       set(clearSelectionAtom, null);
