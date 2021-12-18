@@ -51,6 +51,6 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
 });
 
 export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
-  set(sendAtom, { type: "CLEAR_SELECTION" });
+  set(sendAtom, { type: "UNSELECT_SHAPE", shapeAtom });
   set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
 });

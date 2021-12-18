@@ -23,6 +23,7 @@ const dragCanvasStartAtom = atom<{
   erased?: boolean;
   hasPressingShape?: boolean;
   startTime?: number;
+  startPos?: readonly [number, number];
 } | null>(null);
 
 const dragCanvasEndAtom = atom<{
@@ -49,9 +50,13 @@ export const dragCanvasAtom = atom(
     // draw mode
     if (mode === "draw") {
       if (action.type === "start" && !dragStart) {
-        set(dragCanvasStartAtom, {});
-        set(addDotAtom, action.pos);
+        set(dragCanvasStartAtom, { startPos: action.pos });
       } else if (action.type === "move" && dragStart) {
+        if (dragStart.startPos) {
+          const { startPos, ...rest } = dragStart;
+          set(addDotAtom, dragStart.startPos);
+          set(dragCanvasStartAtom, rest);
+        }
         set(addDotAtom, action.pos);
       } else if (action.type === "end") {
         set(dragCanvasStartAtom, null);
@@ -141,14 +146,23 @@ export const dragCanvasAtom = atom(
       return;
     }
 
-    // color mode
-    if (mode === "color") {
+    // erase mode
+    if (mode === "erase") {
       if (action.type === "start" && !dragStart) {
-        set(dragCanvasStartAtom, {});
+        set(dragCanvasStartAtom, {
+          hasPressingShape: !!get(pressingShapeAtom),
+        });
       } else if (action.type === "end" && dragStart) {
+        if (!dragStart.hasPressingShape) {
+          set(sendAtom, { type: "CLEAR_SELECTION" });
+        }
         set(dragCanvasStartAtom, null);
       }
       return;
+    }
+
+    if (action.type === "start") {
+      set(sendAtom, { type: "CLEAR_SELECTION" });
     }
   }
 );

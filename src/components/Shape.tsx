@@ -19,7 +19,7 @@ const ShapePath: React.FC<{
   shape: TShapePath;
   isSelected: boolean;
 }> = ({ shapeAtom, shape, isSelected }) => {
-  const [mode] = useAtom(modeAtom); // XXX this is very unfortunate (re-render all shapes)
+  const [mode] = useAtom(modeAtom); // FIXME use derived atom
   const [, send] = useAtom(sendAtom);
   const [, deleteShape] = useAtom(deleteShapeAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
@@ -27,7 +27,7 @@ const ShapePath: React.FC<{
   return (
     <G
       transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
-      onStartShouldSetResponder={() => mode !== "draw"}
+      onStartShouldSetResponder={() => true}
       onPress={() => {
         if (mode === "erase" && isSelected) {
           deleteShape(shapeAtom);
@@ -79,9 +79,7 @@ const ShapeImage: React.FC<{
         onPressOut={() => {
           setPressingShape(null);
         }}
-        ref={(instance: any) => {
-          hackTouchableNode(instance);
-        }}
+        ref={hackTouchableNode}
       >
         <Rect
           x={-handleSize * 2}

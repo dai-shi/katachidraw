@@ -18,7 +18,20 @@ type ModeEvent =
   | { type: "SELECT_ERASE_MODE" }
   | { type: "SELECT_COLOR_MODE" }
   | { type: "PRESS_SHAPE"; shapeAtom: ShapeAtom }
+  | { type: "UNSELECT_SHAPE"; shapeAtom: ShapeAtom }
   | { type: "CLEAR_SELECTION" };
+
+const removeSelection = assign<ModeContext, ModeEvent>({
+  selectedShapeAtoms: (context, event) => {
+    if (event.type === "UNSELECT_SHAPE") {
+      const selectedShapeAtoms = new Set(context.selectedShapeAtoms);
+      const { shapeAtom } = event;
+      selectedShapeAtoms.delete(shapeAtom);
+      return selectedShapeAtoms;
+    }
+    return context.selectedShapeAtoms;
+  },
+});
 
 const toggleSelection = assign<ModeContext, ModeEvent>({
   selectedShapeAtoms: (context, event) => {
@@ -67,7 +80,14 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
           },
         },
       },
-      draw: {},
+      draw: {
+        on: {
+          PRESS_SHAPE: {
+            target: "move",
+            actions: ["toggleSelection"],
+          },
+        },
+      },
       erase: {},
       color: {},
       afterPressingShape: {
@@ -93,6 +113,9 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
       PRESS_SHAPE: {
         actions: ["toggleSelection"],
       },
+      UNSELECT_SHAPE: {
+        actions: ["removeSelection"],
+      },
       CLEAR_SELECTION: {
         target: "draw",
         actions: ["clearSelection"],
@@ -101,6 +124,7 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
   },
   {
     actions: {
+      removeSelection,
       toggleSelection,
       clearSelection,
     },
