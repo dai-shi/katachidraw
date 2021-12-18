@@ -1,5 +1,4 @@
-import * as React from "react"; // for expo
-import { FC, memo } from "react";
+import { memo } from "react";
 import { Rect } from "react-native-svg";
 import { useAtom } from "jotai";
 
@@ -8,7 +7,7 @@ import { setColorAtom } from "../atoms/colorPicker";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 import openColors from "../utils/open-color.json";
 
-export const ColorPicker: FC = () => {
+export const ColorPicker = () => {
   const [mode] = useAtom(modeAtom);
   const [, setColor] = useAtom(setColorAtom);
   if (mode !== "color") {

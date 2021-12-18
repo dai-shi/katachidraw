@@ -22,7 +22,9 @@ export const toolbarAtom = atom(
     return [
       ...(mode === "pan" ? [{ id: "pan", active: true }] : []),
       ...(mode === "move" ? [{ id: "move", active: true }] : []),
-      ...(mode === "draw" ? [{ id: "draw", active: true }] : []),
+      ...(mode !== "pan" && mode !== "move"
+        ? [{ id: "draw", active: mode === "draw" }]
+        : []),
       { id: "erase", active: mode === "erase" },
       { id: "color", active: mode === "color" },
       hasSelection ? { id: "bigger" } : { id: "zoomIn" },

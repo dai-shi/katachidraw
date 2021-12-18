@@ -1,5 +1,4 @@
-import * as React from "react"; // for expo
-import { FC, ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import Svg, { Rect, G } from "react-native-svg";
 import { useAtom } from "jotai";
 
@@ -23,7 +22,7 @@ type Props = {
   SliderElement?: ReactElement;
 };
 
-export const Canvas: FC<Props> = ({
+export const Canvas = ({
   width,
   height,
   ShapesElement = <Shapes />,
@@ -32,7 +31,7 @@ export const Canvas: FC<Props> = ({
   ToolbarElement = <Toolbar fileSystemModule={FileSystem} />,
   sliderPosition = [-(width * 0.75) - 10, -40 - 10],
   SliderElement = <Slider width={width * 0.75} />,
-}) => {
+}: Props) => {
   const [, setDimension] = useAtom(dimensionAtom);
   useEffect(() => {
     setDimension({ width, height });

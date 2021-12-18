@@ -106,7 +106,7 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
       SELECT_PAN_MODE: { target: "pan" },
       SELECT_MOVE_MODE: { target: "move" },
       SELECT_DRAW_MODE: { target: "draw", actions: ["clearSelection"] },
-      SELECT_ERASE_MODE: { target: "erase" },
+      SELECT_ERASE_MODE: { target: "erase", actions: ["clearSelection"] },
       SELECT_COLOR_MODE: { target: "color" },
       PRESS_SHAPE: {
         actions: ["toggleSelection"],

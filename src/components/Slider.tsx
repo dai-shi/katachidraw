@@ -1,5 +1,4 @@
-import * as React from "react"; // for expo
-import { FC, memo } from "react";
+import { memo } from "react";
 import { Rect, Circle, Path, G } from "react-native-svg";
 import { useAtom } from "jotai";
 
@@ -16,7 +15,7 @@ type Props = {
   radius?: number;
 };
 
-export const Slider: FC<Props> = ({ width = 300, height = 40, radius = 6 }) => {
+export const Slider = ({ width = 300, height = 40, radius = 6 }: Props) => {
   const [pos] = useAtom(historyPositionAtom);
   const [, historyBack] = useAtom(hisotryBackAtom);
   const [, historyForward] = useAtom(hisotryForwardAtom);

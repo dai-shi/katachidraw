@@ -1,6 +1,6 @@
 import { atom, PrimitiveAtom } from "jotai";
 
-import { sendAtom } from "./modeMachine";
+import { sendAtom, modeAtom } from "./modeMachine";
 import { adjustSvgPath } from "../utils/svgpath";
 
 type TShapeCommon = {
@@ -50,7 +50,10 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
 });
 
-export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
-  set(sendAtom, { type: "UNSELECT_SHAPE", shapeAtom });
-  set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
+export const deleteShapeAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
+  const mode = get(modeAtom);
+  if (mode === "erase") {
+    set(sendAtom, { type: "UNSELECT_SHAPE", shapeAtom });
+    set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
+  }
 });

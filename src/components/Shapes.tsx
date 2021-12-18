@@ -1,12 +1,11 @@
-import * as React from "react"; // for expo
-import { FC, memo } from "react";
+import { memo } from "react";
 import { useAtom } from "jotai";
 
 import { selectedAtom } from "../atoms/modeMachine";
 import { allShapesAtom } from "../atoms/shapes";
 import Shape from "./Shape";
 
-export const Shapes: FC = () => {
+export const Shapes = () => {
   const [shapeAtomList] = useAtom(allShapesAtom);
   useAtom(selectedAtom); // to initialize the derived atom (Hmmm)
   return (

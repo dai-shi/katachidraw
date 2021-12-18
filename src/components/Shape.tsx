@@ -1,10 +1,9 @@
-import * as React from "react"; // for expo
-import { FC, memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Platform } from "react-native";
 import { G, Path, Image, Rect } from "react-native-svg";
 import { atom, useAtom } from "jotai";
 
-import { sendAtom, modeAtom, selectedAtom } from "../atoms/modeMachine";
+import { sendAtom, selectedAtom } from "../atoms/modeMachine";
 import {
   ShapeAtom,
   TShapePath,
@@ -14,12 +13,15 @@ import {
 import { setPressingShapeAtom } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
-const ShapePath: React.FC<{
+const ShapePath = ({
+  shapeAtom,
+  shape,
+  isSelected,
+}: {
   shapeAtom: ShapeAtom;
   shape: TShapePath;
   isSelected: boolean;
-}> = ({ shapeAtom, shape, isSelected }) => {
-  const [mode] = useAtom(modeAtom); // FIXME use derived atom
+}) => {
   const [, send] = useAtom(sendAtom);
   const [, deleteShape] = useAtom(deleteShapeAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
@@ -29,7 +31,7 @@ const ShapePath: React.FC<{
       transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
       onStartShouldSetResponder={() => true}
       onPress={() => {
-        if (mode === "erase" && isSelected) {
+        if (isSelected) {
           deleteShape(shapeAtom);
         }
         send({ type: "PRESS_SHAPE", shapeAtom });
@@ -40,7 +42,7 @@ const ShapePath: React.FC<{
       onPressOut={() => {
         setPressingShape(null);
       }}
-      ref={hackTouchableNode}
+      ref={(instance: any) => hackTouchableNode(instance)}
     >
       <Path
         d={shape.path}
@@ -54,11 +56,15 @@ const ShapePath: React.FC<{
   );
 };
 
-const ShapeImage: React.FC<{
+const ShapeImage = ({
+  shapeAtom,
+  shape,
+  isSelected,
+}: {
   shapeAtom: ShapeAtom;
   shape: TShapeImage;
   isSelected: boolean;
-}> = ({ shapeAtom, shape, isSelected }) => {
+}) => {
   const [, send] = useAtom(sendAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
   const handleSize = 12 / shape.scale;
@@ -109,9 +115,7 @@ const ShapeImage: React.FC<{
   );
 };
 
-export const Shape: FC<{
-  shapeAtom: ShapeAtom;
-}> = ({ shapeAtom }) => {
+export const Shape = ({ shapeAtom }: { shapeAtom: ShapeAtom }) => {
   const [shape] = useAtom(shapeAtom);
   const [isSelected] = useAtom(
     useMemo(() => atom((get) => get(selectedAtom).has(shapeAtom)), [shapeAtom])

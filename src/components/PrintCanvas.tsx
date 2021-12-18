@@ -1,5 +1,4 @@
-import * as React from "react"; // for expo
-import { FC, ComponentType, ComponentProps } from "react";
+import { ComponentType, ComponentProps } from "react";
 import SvgOrig, { G, Path, Image } from "react-native-svg";
 
 import type { TShape } from "../atoms/shapes";
@@ -14,7 +13,7 @@ type Props = {
   shapes: TShape[];
 };
 
-export const PrintCanvas: FC<Props> = ({ shapes }) => (
+export const PrintCanvas = ({ shapes }: Props) => (
   <Svg xmlns="http://www.w3.org/2000/svg">
     {shapes.map((shape, index) => (
       <G
