@@ -2,7 +2,8 @@ import * as React from "react"; // for expo
 import { FC, memo } from "react";
 import { useAtom } from "jotai";
 
-import { allShapesAtom, selectedAtom } from "../atoms/shapes";
+import { selectedAtom } from "../atoms/modeMachine";
+import { allShapesAtom } from "../atoms/shapes";
 import Shape from "./Shape";
 
 export const Shapes: FC = () => {

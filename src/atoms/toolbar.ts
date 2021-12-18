@@ -1,16 +1,14 @@
 import { atom } from "jotai";
 
-import { modeAtom, offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
 import {
+  sendAtom,
+  modeAtom,
   selectedAtom,
   hasSelectionAtom,
   hasImageOnlySelectionAtom,
-  clearSelectionAtom,
-  resetModeBasedOnSelection,
-  allShapesAtom,
-  addShapeImageAtom,
-} from "./shapes";
-import { modeMachineAtom } from "./modeMachine";
+} from "./modeMachine";
+import { offsetAtom, zoomAtom, dimensionAtom } from "./canvas";
+import { allShapesAtom, addShapeImageAtom } from "./shapes";
 import { saveHistoryAtom } from "./history";
 import { FileSystemModule } from "../modules/file-system/FileSystemModule";
 import { serialize } from "../utils/serialize";
@@ -18,7 +16,6 @@ import { PrintCanvas } from "../components/PrintCanvas";
 
 export const toolbarAtom = atom(
   (get) => {
-    get(modeMachineAtom);
     const mode = get(modeAtom);
     const hasSelection = get(hasSelectionAtom);
     const hasImageOnlySelection = get(hasImageOnlySelectionAtom);
@@ -44,23 +41,18 @@ export const toolbarAtom = atom(
     { id, fileSystemModule }: { id: string; fileSystemModule: FileSystemModule }
   ) => {
     if (id === "pan") {
-      set(modeMachineAtom, "SELECT_PAN_MODE");
+      set(sendAtom, { type: "SELECT_PAN_MODE" });
     } else if (id === "move") {
-      set(modeMachineAtom, "SELECT_MOVE_MODE");
+      set(sendAtom, { type: "SELECT_MOVE_MODE" });
     } else if (id === "draw") {
-      set(modeMachineAtom, "SELECT_DRAW_MODE");
+      set(sendAtom, { type: "SELECT_DRAW_MODE" });
     } else if (id === "erase") {
-      set(modeMachineAtom, "SELECT_ERASE_MODE");
+      set(sendAtom, { type: "SELECT_ERASE_MODE" });
     } else if (id === "color") {
-      set(modeMachineAtom, "SELECT_COLOR_MODE");
+      set(sendAtom, { type: "SELECT_COLOR_MODE" });
     }
 
-    if (id === "pan" || id === "draw" || id === "erase") {
-      set(modeAtom, id);
-      set(clearSelectionAtom, null);
-    } else if (id === "move") {
-      set(modeAtom, id);
-    } else if (id === "bigger" || id === "smaller") {
+    if (id === "bigger" || id === "smaller") {
       const selected = get(selectedAtom);
       let left = Infinity;
       let top = Infinity;
@@ -91,9 +83,6 @@ export const toolbarAtom = atom(
         x: prev.x + (dimension.width * (1 / zoom - 1 / nextZoom)) / 2,
         y: prev.y + (dimension.height * (1 / zoom - 1 / nextZoom)) / 2,
       }));
-      if (get(modeAtom) === "color") {
-        set(resetModeBasedOnSelection, null);
-      }
     } else if (id === "rotateLeft" || id === "rotateRight") {
       const selected = get(selectedAtom);
       selected.forEach((shapeAtom) => {
@@ -109,13 +98,10 @@ export const toolbarAtom = atom(
         }
       });
     } else if (id === "color") {
-      if (get(modeAtom) === "color") {
-        set(resetModeBasedOnSelection, null);
-      } else {
+      if (get(modeAtom) !== "color") {
         if (get(hasImageOnlySelectionAtom)) {
-          set(clearSelectionAtom, null);
+          set(sendAtom, { type: "CLEAR_SELECTION" });
         }
-        set(modeAtom, "color");
       }
     } else if (id === "image") {
       fileSystemModule.loadImageFile().then((image) => {

@@ -3,7 +3,7 @@ import { FC, memo } from "react";
 import { Rect } from "react-native-svg";
 import { useAtom } from "jotai";
 
-import { modeAtom } from "../atoms/canvas";
+import { modeAtom } from "../atoms/modeMachine";
 import { setColorAtom } from "../atoms/colorPicker";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 import openColors from "../utils/open-color.json";

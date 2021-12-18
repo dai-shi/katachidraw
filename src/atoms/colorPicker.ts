@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 
-import { modeAtom } from "./canvas";
-import { selectedAtom, colorAtom } from "./shapes";
+import { selectedAtom } from "./modeMachine";
+import { colorAtom } from "./shapes";
 import { saveHistoryAtom } from "./history";
 
 export const setColorAtom = atom(null, (get, set, color: string) => {
@@ -13,6 +13,5 @@ export const setColorAtom = atom(null, (get, set, color: string) => {
     set(saveHistoryAtom, null);
   } else {
     set(colorAtom, color);
-    set(modeAtom, "draw");
   }
 });

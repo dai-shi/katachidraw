@@ -1,8 +1,9 @@
 import { atom } from "jotai";
 import type { Getter, Setter } from "jotai";
 
+import { sendAtom } from "./modeMachine";
 import type { TShape } from "./shapes";
-import { allShapesAtom, clearSelectionAtom } from "./shapes";
+import { allShapesAtom } from "./shapes";
 
 type HistoryItem = {
   shapes: TShape[];
@@ -30,9 +31,6 @@ export const saveHistoryAtom = atom(null, (get, set, _arg) => {
   // add current shapes
   const shapes: TShape[] = get(allShapesAtom).map((shapeAtom) => {
     const shape = get(shapeAtom);
-    if (shape.selected) {
-      return { ...shape, selected: false };
-    }
     return shape;
   });
   history.unshift({ shapes }); // mutate array
@@ -54,7 +52,7 @@ export const hisotryBackAtom = atom(null, (get, set, _arg) => {
     index += 1;
     set(historyIndexAtom, index);
     restoreHistory(get, set);
-    set(clearSelectionAtom, null);
+    set(sendAtom, { type: "CLEAR_SELECTION" });
   }
 });
 
@@ -64,6 +62,6 @@ export const hisotryForwardAtom = atom(null, (get, set, _arg) => {
     index -= 1;
     set(historyIndexAtom, index);
     restoreHistory(get, set);
-    set(clearSelectionAtom, null);
+    set(sendAtom, { type: "CLEAR_SELECTION" });
   }
 });
