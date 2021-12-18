@@ -91,17 +91,15 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
       erase: {},
       color: {},
       afterPressingShape: {
-        on: {
-          "": [
-            {
-              target: "move",
-              cond: "hasSelection",
-            },
-            {
-              target: "pan",
-            },
-          ],
-        },
+        always: [
+          {
+            target: "move",
+            cond: "hasSelection",
+          },
+          {
+            target: "draw",
+          },
+        ],
       },
     },
     on: {

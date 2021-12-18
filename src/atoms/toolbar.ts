@@ -20,10 +20,9 @@ export const toolbarAtom = atom(
     const hasSelection = get(hasSelectionAtom);
     const hasImageOnlySelection = get(hasImageOnlySelectionAtom);
     return [
-      hasSelection
-        ? { id: "move", active: mode === "move" }
-        : { id: "pan", active: mode === "pan" },
-      { id: "draw", active: mode === "draw" },
+      ...(mode === "pan" ? [{ id: "pan", active: true }] : []),
+      ...(mode === "move" ? [{ id: "move", active: true }] : []),
+      ...(mode === "draw" ? [{ id: "draw", active: true }] : []),
       { id: "erase", active: mode === "erase" },
       { id: "color", active: mode === "color" },
       hasSelection ? { id: "bigger" } : { id: "zoomIn" },
