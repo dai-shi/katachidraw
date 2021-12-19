@@ -47,6 +47,7 @@ export const Canvas = ({
         onStartShouldSetResponder={() => true}
         onMoveShouldSetResponderCapture={() => true}
         onResponderGrant={(e) => {
+          // console.log("start", e.nativeEvent.touches.length)
           const { locationX, locationY } = e.nativeEvent;
           drag({
             type: "start",
@@ -54,6 +55,7 @@ export const Canvas = ({
           });
         }}
         onResponderMove={(e) => {
+          // console.log("move", e.nativeEvent.touches.length)
           const { locationX, locationY } = e.nativeEvent;
           drag({
             type: "move",
@@ -61,6 +63,7 @@ export const Canvas = ({
           });
         }}
         onResponderEnd={() => {
+          // console.log("end", e.nativeEvent.touches.length)
           drag({ type: "end" });
         }}
         ref={hackTouchableNode}
