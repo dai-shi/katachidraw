@@ -1,11 +1,10 @@
-import * as React from "react"; // for expo
-import { FC, memo } from "react";
+import { memo } from "react";
 import { Circle } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { dotsAtom } from "../atoms/dots";
 
-export const Dots: FC = () => {
+export const Dots = () => {
   const [dots] = useAtom(dotsAtom);
   return (
     <>

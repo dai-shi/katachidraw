@@ -1,11 +1,10 @@
-import * as React from "react"; // for expo
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Dimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import Canvas from "./Canvas";
 
-export const App: FC = () => {
+export const App = () => {
   const [dimensions, setDimensions] = useState<{
     width: number;
     height: number;
@@ -18,9 +17,9 @@ export const App: FC = () => {
     }) => {
       setDimensions(window);
     };
-    Dimensions.addEventListener("change", onChange);
+    const subscription = Dimensions.addEventListener("change", onChange);
     return () => {
-      Dimensions.removeEventListener("change", onChange);
+      subscription.remove();
     };
   }, []);
   return (

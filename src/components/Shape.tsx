@@ -1,38 +1,40 @@
-import * as React from "react"; // for expo
-import { FC, memo } from "react";
+import { memo, useMemo } from "react";
 import { Platform } from "react-native";
 import { G, Path, Image, Rect } from "react-native-svg";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 
-import { modeAtom } from "../atoms/canvas";
+import { sendAtom, selectedAtom } from "../atoms/modeMachine";
 import {
   ShapeAtom,
-  selectAtom,
   TShapePath,
   TShapeImage,
+  deleteShapeAtom,
 } from "../atoms/shapes";
-import {
-  setPressingShapeAtom,
-  IsPointInShape,
-  registerIsPointInShapeAtom,
-} from "../atoms/drag";
+import { setPressingShapeAtom } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
-const ShapePath: React.FC<{
+const ShapePath = ({
+  shapeAtom,
+  shape,
+  isSelected,
+}: {
   shapeAtom: ShapeAtom;
   shape: TShapePath;
-}> = ({ shapeAtom, shape }) => {
-  const [mode] = useAtom(modeAtom); // XXX this is very unfortunate (re-render all shapes)
-  const [, select] = useAtom(selectAtom);
+  isSelected: boolean;
+}) => {
+  const [, send] = useAtom(sendAtom);
+  const [, deleteShape] = useAtom(deleteShapeAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
-  const [, registerIsPointInShape] = useAtom(registerIsPointInShapeAtom);
 
   return (
     <G
       transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
-      onStartShouldSetResponder={() => mode !== "draw"}
+      onStartShouldSetResponder={() => true}
       onPress={() => {
-        select(shapeAtom);
+        if (isSelected) {
+          deleteShape(shapeAtom);
+        }
+        send({ type: "PRESS_SHAPE", shapeAtom });
       }}
       onPressIn={() => {
         setPressingShape(shapeAtom);
@@ -40,31 +42,13 @@ const ShapePath: React.FC<{
       onPressOut={() => {
         setPressingShape(null);
       }}
-      ref={(instance: any) => {
-        hackTouchableNode(instance);
-        let isPointInShape: IsPointInShape;
-        if (Platform.OS === "web") {
-          const node = instance?._touchableNode;
-          isPointInShape = (pos) => {
-            const ele = document.elementFromPoint(pos[0], pos[1]);
-            return !!node && (ele === node || ele?.parentNode === node);
-          };
-        } else {
-          isPointInShape = (pos, offset, zoom) => {
-            const point = instance.ownerSVGElement.createSVGPoint();
-            point.x = offset.x + pos[0] / zoom;
-            point.y = offset.y + pos[1] / zoom;
-            return instance.isPointInFill(point);
-          };
-        }
-        registerIsPointInShape({ shapeAtom, isPointInShape });
-      }}
+      ref={(instance: any) => hackTouchableNode(instance)}
     >
       <Path
         d={shape.path}
         fill="red"
         stroke="red"
-        opacity={shape.selected ? 0.2 : 0}
+        opacity={isSelected ? 0.2 : 0}
         strokeWidth={30 / shape.scale}
       />
       <Path d={shape.path} fill={shape.color} />
@@ -72,11 +56,16 @@ const ShapePath: React.FC<{
   );
 };
 
-const ShapeImage: React.FC<{
+const ShapeImage = ({
+  shapeAtom,
+  shape,
+  isSelected,
+}: {
   shapeAtom: ShapeAtom;
   shape: TShapeImage;
-}> = ({ shapeAtom, shape }) => {
-  const [, select] = useAtom(selectAtom);
+  isSelected: boolean;
+}) => {
+  const [, send] = useAtom(sendAtom);
   const [, setPressingShape] = useAtom(setPressingShapeAtom);
   const handleSize = 12 / shape.scale;
 
@@ -88,7 +77,7 @@ const ShapeImage: React.FC<{
     >
       <G
         onPress={() => {
-          select(shapeAtom);
+          send({ type: "PRESS_SHAPE", shapeAtom });
         }}
         onPressIn={() => {
           setPressingShape(shapeAtom);
@@ -96,9 +85,7 @@ const ShapeImage: React.FC<{
         onPressOut={() => {
           setPressingShape(null);
         }}
-        ref={(instance: any) => {
-          hackTouchableNode(instance);
-        }}
+        ref={hackTouchableNode}
       >
         <Rect
           x={-handleSize * 2}
@@ -106,7 +93,7 @@ const ShapeImage: React.FC<{
           width={handleSize * 3}
           height={handleSize * 3}
           fill="red"
-          opacity={shape.selected ? 0.2 : 0}
+          opacity={isSelected ? 0.2 : 0}
         />
         <Rect
           x={-handleSize}
@@ -128,16 +115,21 @@ const ShapeImage: React.FC<{
   );
 };
 
-export const Shape: FC<{
-  shapeAtom: ShapeAtom;
-}> = ({ shapeAtom }) => {
+export const Shape = ({ shapeAtom }: { shapeAtom: ShapeAtom }) => {
   const [shape] = useAtom(shapeAtom);
+  const [isSelected] = useAtom(
+    useMemo(() => atom((get) => get(selectedAtom).has(shapeAtom)), [shapeAtom])
+  );
 
   if ("path" in shape) {
-    return <ShapePath shapeAtom={shapeAtom} shape={shape} />;
+    return (
+      <ShapePath shapeAtom={shapeAtom} shape={shape} isSelected={isSelected} />
+    );
   }
   if ("image" in shape) {
-    return <ShapeImage shapeAtom={shapeAtom} shape={shape} />;
+    return (
+      <ShapeImage shapeAtom={shapeAtom} shape={shape} isSelected={isSelected} />
+    );
   }
   return null;
 };

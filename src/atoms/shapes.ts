@@ -1,13 +1,12 @@
 import { atom, PrimitiveAtom } from "jotai";
 
-import { modeAtom } from "./canvas";
+import { sendAtom, modeAtom } from "./modeMachine";
 import { adjustSvgPath } from "../utils/svgpath";
 
 type TShapeCommon = {
   x: number;
   y: number;
   scale: number;
-  selected?: boolean;
 };
 
 export type TShapePath = TShapeCommon & {
@@ -49,86 +48,12 @@ export const addShapeImageAtom = atom(null, (get, set, image: string) => {
   };
   const shapeAtom = atom(shape) as ShapeAtom;
   set(allShapesAtom, [...get(allShapesAtom), shapeAtom]);
-  if (get(modeAtom) === "draw") {
-    set(modeAtom, "pan");
-  }
-  set(selectAtom, shapeAtom);
 });
 
-const selectedShapesAtom = atom(new Set<ShapeAtom>());
-
-export const selectedAtom = atom((get) => get(selectedShapesAtom));
-
-export const hasSelectionAtom = atom((get) => !!get(selectedShapesAtom).size);
-
-export const hasImageOnlySelectionAtom = atom((get) => {
-  const selected = get(selectedShapesAtom);
-  return (
-    !!selected.size && [...selected].every((shape) => "image" in get(shape))
-  );
-});
-
-export const selectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
+export const deleteShapeAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
   const mode = get(modeAtom);
-  if (mode === "draw") {
-    return;
-  }
-  const selected = get(selectedShapesAtom);
-  if (selected.has(shapeAtom)) {
-    if (mode === "erase") {
-      set(deleteShapeAtom, shapeAtom);
-    } else {
-      set(unselectAtom, shapeAtom);
-    }
-  } else {
-    set(shapeAtom, (prev) => ({ ...prev, selected: true }));
-    set(selectedShapesAtom, new Set(selected).add(shapeAtom));
-    if (mode === "pan") {
-      set(modeAtom, "move");
-    }
-  }
-});
-
-export const unselectAtom = atom(null, (get, set, shapeAtom: ShapeAtom) => {
-  const selected = get(selectedShapesAtom);
-  if (selected.has(shapeAtom)) {
-    set(shapeAtom, (prev) => ({ ...prev, selected: false }));
-    const nextSelected = new Set(selected);
-    nextSelected.delete(shapeAtom);
-    set(selectedShapesAtom, nextSelected);
-    if (!nextSelected.size) {
-      const mode = get(modeAtom);
-      if (mode === "move") {
-        set(modeAtom, "pan");
-      }
-    }
-  }
-});
-
-export const clearSelectionAtom = atom(null, (get, set) => {
-  const selected = get(selectedShapesAtom);
-  selected.forEach((shapeAtom) => {
-    if (get(shapeAtom).selected) {
-      set(shapeAtom, (prev) => ({ ...prev, selected: false }));
-    }
-  });
-  set(selectedShapesAtom, new Set());
-  const mode = get(modeAtom);
-  if (mode === "move") {
-    set(modeAtom, "pan");
-  }
-});
-
-export const deleteShapeAtom = atom(null, (_get, set, shapeAtom: ShapeAtom) => {
-  set(unselectAtom, shapeAtom);
-  set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
-});
-
-export const resetModeBasedOnSelection = atom(null, (get, set, _arg) => {
-  const selected = get(selectedAtom);
-  if (selected.size) {
-    set(modeAtom, "move");
-  } else {
-    set(modeAtom, "draw");
+  if (mode === "erase") {
+    set(sendAtom, { type: "UNSELECT_SHAPE", shapeAtom });
+    set(allShapesAtom, (prev) => prev.filter((item) => item !== shapeAtom));
   }
 });

@@ -1,5 +1,4 @@
-import * as React from "react"; // for expo
-import { FC, ReactElement, memo } from "react";
+import { ReactElement, memo } from "react";
 import { G, Rect } from "react-native-svg";
 import { useAtom } from "jotai";
 
@@ -45,13 +44,13 @@ type Props = {
   fileSystemModule: FileSystemModule;
 };
 
-export const Toolbar: FC<Props> = ({
+export const Toolbar = ({
   size = 36,
   margin = 8,
   radius = 6,
   ColorPickerElement = <ColorPicker />,
   fileSystemModule,
-}) => {
+}: Props) => {
   const [tools, dispatch] = useAtom(toolbarAtom);
   return (
     <>
