@@ -54,6 +54,10 @@ export const dragCanvasAtom = atom(
       } else if (action.type === "move" && dragStart) {
         if (dragStart.startPos) {
           const { startPos, ...rest } = dragStart;
+          if (startPos[0] === action.pos[0] && startPos[1] === action.pos[1]) {
+            // no move
+            return;
+          }
           set(addDotAtom, dragStart.startPos);
           set(dragCanvasStartAtom, rest);
         }
