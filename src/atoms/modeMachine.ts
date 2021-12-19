@@ -5,7 +5,9 @@ import { inspect } from "@xstate/inspect";
 
 import { ShapeAtom } from "./shapes";
 
-inspect({ iframe: false });
+try {
+  inspect({ iframe: false });
+} catch {}
 
 type ModeContext = {
   selectedShapeAtoms: Set<ShapeAtom>;
