@@ -10,7 +10,6 @@ import {
   TShapeImage,
   deleteShapeAtom,
 } from "../atoms/shapes";
-import { setPressingShapeAtom } from "../atoms/drag";
 import { hackTouchableNode } from "../utils/touchHandlerHack";
 
 const ShapePath = ({
@@ -24,23 +23,16 @@ const ShapePath = ({
 }) => {
   const [, send] = useAtom(sendAtom);
   const [, deleteShape] = useAtom(deleteShapeAtom);
-  const [, setPressingShape] = useAtom(setPressingShapeAtom);
 
   return (
     <G
       transform={`translate(${shape.x} ${shape.y}) scale(${shape.scale})`}
-      onStartShouldSetResponder={() => true}
       onPress={() => {
         if (isSelected) {
+          // will check "erase" mode in the function
           deleteShape(shapeAtom);
         }
         send({ type: "PRESS_SHAPE", shapeAtom });
-      }}
-      onPressIn={() => {
-        setPressingShape(shapeAtom);
-      }}
-      onPressOut={() => {
-        setPressingShape(null);
       }}
       ref={(instance: any) => hackTouchableNode(instance)}
     >
@@ -66,7 +58,6 @@ const ShapeImage = ({
   isSelected: boolean;
 }) => {
   const [, send] = useAtom(sendAtom);
-  const [, setPressingShape] = useAtom(setPressingShapeAtom);
   const handleSize = 12 / shape.scale;
 
   return (
@@ -78,12 +69,6 @@ const ShapeImage = ({
       <G
         onPress={() => {
           send({ type: "PRESS_SHAPE", shapeAtom });
-        }}
-        onPressIn={() => {
-          setPressingShape(shapeAtom);
-        }}
-        onPressOut={() => {
-          setPressingShape(null);
         }}
         ref={hackTouchableNode}
       >

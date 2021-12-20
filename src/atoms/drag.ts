@@ -3,16 +3,7 @@ import { atom } from "jotai";
 import { sendAtom, modeAtom, selectedAtom } from "./modeMachine";
 import { offsetAtom, zoomAtom } from "./canvas";
 import { addDotAtom, commitDotsAtom } from "./dots";
-import { ShapeAtom } from "./shapes";
 import { saveHistoryAtom } from "./history";
-
-const pressingShapeAtom = atom<ShapeAtom | null>(null);
-export const setPressingShapeAtom = atom(
-  null,
-  (_get, set, shapeAtom: ShapeAtom | null) => {
-    set(pressingShapeAtom, shapeAtom);
-  }
-);
 
 type ShapeMap = Map<object, { x: number; y: number }>;
 
@@ -21,13 +12,7 @@ const dragCanvasStartAtom = atom<{
   shapeMap?: ShapeMap;
   dragged?: boolean;
   erased?: boolean;
-  hasPressingShape?: boolean;
-  startTime?: number;
   startPos?: readonly [number, number];
-} | null>(null);
-
-const dragCanvasEndAtom = atom<{
-  endTime?: number;
 } | null>(null);
 
 export const dragCanvasAtom = atom(
@@ -75,12 +60,7 @@ export const dragCanvasAtom = atom(
 
     // move mode
     if (mode === "move") {
-      if (
-        action.type === "start" &&
-        !dragStart &&
-        // XXX Mobile Safari accidentally triggers another event very quickly?
-        performance.now() - (get(dragCanvasEndAtom)?.endTime ?? 0) > 99
-      ) {
+      if (action.type === "start" && !dragStart) {
         const shapeMap: ShapeMap = new Map();
         selected.forEach((shapeAtom) => {
           const shape = get(shapeAtom);
@@ -91,8 +71,6 @@ export const dragCanvasAtom = atom(
         });
         set(dragCanvasStartAtom, {
           shapeMap,
-          hasPressingShape: !!get(pressingShapeAtom),
-          startTime: performance.now(),
         });
       } else if (action.type === "move" && dragStart) {
         selected.forEach((shapeAtom) => {
@@ -113,16 +91,10 @@ export const dragCanvasAtom = atom(
         if (dragStart.dragged) {
           set(saveHistoryAtom, null);
         }
-        if (
-          (!dragStart.dragged ||
-            performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) <
-              150) &&
-          !dragStart.hasPressingShape
-        ) {
+        if (!dragStart.dragged && dragStart.shapeMap?.size === selected.size) {
           set(sendAtom, { type: "CLEAR_SELECTION" });
         }
         set(dragCanvasStartAtom, null);
-        set(dragCanvasEndAtom, { endTime: performance.now() });
       }
       return;
     }
@@ -153,13 +125,8 @@ export const dragCanvasAtom = atom(
     // erase mode
     if (mode === "erase") {
       if (action.type === "start" && !dragStart) {
-        set(dragCanvasStartAtom, {
-          hasPressingShape: !!get(pressingShapeAtom),
-        });
+        set(dragCanvasStartAtom, {});
       } else if (action.type === "end" && dragStart) {
-        if (!dragStart.hasPressingShape) {
-          set(sendAtom, { type: "CLEAR_SELECTION" });
-        }
         set(dragCanvasStartAtom, null);
       }
       return;
