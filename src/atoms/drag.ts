@@ -12,12 +12,7 @@ const dragCanvasStartAtom = atom<{
   shapeMap?: ShapeMap;
   dragged?: boolean;
   erased?: boolean;
-  startTime?: number;
   startPos?: readonly [number, number];
-} | null>(null);
-
-const dragCanvasEndAtom = atom<{
-  endTime?: number;
 } | null>(null);
 
 export const dragCanvasAtom = atom(
@@ -65,12 +60,7 @@ export const dragCanvasAtom = atom(
 
     // move mode
     if (mode === "move") {
-      if (
-        action.type === "start" &&
-        !dragStart &&
-        // XXX Mobile Safari accidentally triggers another event very quickly?
-        performance.now() - (get(dragCanvasEndAtom)?.endTime ?? 0) > 99
-      ) {
+      if (action.type === "start" && !dragStart) {
         const shapeMap: ShapeMap = new Map();
         selected.forEach((shapeAtom) => {
           const shape = get(shapeAtom);
@@ -81,7 +71,6 @@ export const dragCanvasAtom = atom(
         });
         set(dragCanvasStartAtom, {
           shapeMap,
-          startTime: performance.now(),
         });
       } else if (action.type === "move" && dragStart) {
         selected.forEach((shapeAtom) => {
@@ -102,16 +91,10 @@ export const dragCanvasAtom = atom(
         if (dragStart.dragged) {
           set(saveHistoryAtom, null);
         }
-        if (
-          !dragStart.dragged ||
-          performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) < 150
-        ) {
-          if (dragStart.shapeMap?.size === selected.size) {
-            set(sendAtom, { type: "CLEAR_SELECTION" });
-          }
+        if (!dragStart.dragged && dragStart.shapeMap?.size === selected.size) {
+          set(sendAtom, { type: "CLEAR_SELECTION" });
         }
         set(dragCanvasStartAtom, null);
-        set(dragCanvasEndAtom, { endTime: performance.now() });
       }
       return;
     }
