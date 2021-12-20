@@ -106,7 +106,9 @@ export const dragCanvasAtom = atom(
           !dragStart.dragged ||
           performance.now() - (get(dragCanvasStartAtom)?.startTime ?? 0) < 150
         ) {
-          set(sendAtom, { type: "CLEAR_SELECTION" });
+          if (dragStart.shapeMap?.size === selected.size) {
+            set(sendAtom, { type: "CLEAR_SELECTION" });
+          }
         }
         set(dragCanvasStartAtom, null);
         set(dragCanvasEndAtom, { endTime: performance.now() });

@@ -33,10 +33,7 @@ export const hackTouchableNode = (instance: any) => {
       props.onPressOut?.();
       if (node._moveCount <= 1) {
         // assume press with small move
-        const { onPress } = props;
-        if (onPress) {
-          setTimeout(onPress, 0);
-        }
+        props.onPress?.();
       }
       node._moveCount = 0;
     };
