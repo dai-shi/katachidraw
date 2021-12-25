@@ -40,15 +40,31 @@ export const hackTouchableNode = (instance: any) => {
       }
       node._moveCount = 0;
     };
-    node.removeEventListener(down, node._previousDownHandler);
-    node.removeEventListener(move, node._previousMoveHandler);
-    node.removeEventListener(up, node._previousUpHandler);
+    const onWheel = (e: any) => {
+      e.preventDefault();
+      const { deltaX, deltaY } = e;
+      if (e.metaKey || e.ctrlKey) {
+        if (emulateResponder && props.onResponderMove) {
+          scaleEvents(deltaY).forEach(props.onResponderMove);
+        }
+      } else {
+        if (emulateResponder && props.onResponderMove) {
+          scrollEvents(deltaX, deltaY).forEach(props.onResponderMove);
+        }
+      }
+    };
+    node.removeEventListener(down, node._previousOnDown);
+    node.removeEventListener(move, node._previousOnMove);
+    node.removeEventListener(up, node._previousOnUp);
+    node.removeEventListener("wheel", node._previousOnWheel);
     node.addEventListener(down, onDown);
     node.addEventListener(move, onMove);
     node.addEventListener(up, onUp);
-    node._previousDownHandler = onDown;
-    node._previousMoveHandler = onMove;
-    node._previousUpHandler = onUp;
+    node.addEventListener("wheel", onWheel);
+    node._previousOnDown = onDown;
+    node._previousOnMove = onMove;
+    node._previousOnUp = onUp;
+    node._previousOnWheel = onWheel;
   }
 };
 
@@ -69,4 +85,76 @@ const hackEvent = (e: any) => {
     preventDefault: () => e.preventDefault(),
     stopPropagation: () => e.stopPropagation(),
   };
+};
+
+const scaleEvents = (scale: number) => {
+  const BASE = 70;
+  const locationX = window.innerWidth / 2;
+  const locationY = window.innerHeight / 2;
+  const touchesArray = [
+    [
+      {
+        locationX,
+        locationY: locationY - BASE,
+      },
+      {
+        locationX,
+        locationY: locationY + BASE,
+      },
+    ],
+    [
+      {
+        locationX,
+        locationY: locationY - BASE + scale,
+      },
+      {
+        locationX,
+        locationY: locationY + BASE - scale,
+      },
+    ],
+    [],
+  ];
+  return touchesArray.map((touches) => ({
+    nativeEvent: {
+      touches,
+    },
+    preventDefault: () => {},
+    stopPropagation: () => {},
+  }));
+};
+
+const scrollEvents = (x: number, y: number) => {
+  const BASE = 50;
+  const locationX = window.innerWidth / 2;
+  const locationY = window.innerHeight / 2;
+  const touchesArray = [
+    [
+      {
+        locationX: locationX - BASE,
+        locationY: locationY - BASE,
+      },
+      {
+        locationX: locationX + BASE,
+        locationY: locationY + BASE,
+      },
+    ],
+    [
+      {
+        locationX: locationX - BASE - x,
+        locationY: locationY - BASE - y,
+      },
+      {
+        locationX: locationX + BASE - x,
+        locationY: locationY + BASE - y,
+      },
+    ],
+    [],
+  ];
+  return touchesArray.map((touches) => ({
+    nativeEvent: {
+      touches,
+    },
+    preventDefault: () => {},
+    stopPropagation: () => {},
+  }));
 };
