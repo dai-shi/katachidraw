@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 
 import { sendAtom, modeAtom, selectedAtom } from "./modeMachine";
-import { offsetAtom, zoomAtom } from "./canvas";
+import { zoomAtom } from "./canvas";
 import { addDotAtom, commitDotsAtom } from "./dots";
 import { saveHistoryAtom } from "./history";
 
@@ -54,7 +54,6 @@ export const dragCanvasAtom = atom(
       return;
     }
 
-    const offset = get(offsetAtom);
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
 
@@ -95,29 +94,6 @@ export const dragCanvasAtom = atom(
         if (!dragged && dragStart.shapeMap?.size === selected.size) {
           set(sendAtom, { type: "CLEAR_SELECTION" });
         }
-        set(dragCanvasStartAtom, null);
-      }
-      return;
-    }
-
-    // pan mode
-    if (mode === "pan") {
-      if (action.type === "start" && !dragStart) {
-        set(dragCanvasStartAtom, {
-          canvas: {
-            x: offset.x + action.pos[0] / zoom,
-            y: offset.y + action.pos[1] / zoom,
-          },
-        });
-      } else if (action.type === "move" && dragStart) {
-        const { canvas } = dragStart;
-        if (canvas) {
-          set(offsetAtom, {
-            x: canvas.x - action.pos[0] / zoom,
-            y: canvas.y - action.pos[1] / zoom,
-          });
-        }
-      } else if (action.type === "end" && dragStart) {
         set(dragCanvasStartAtom, null);
       }
       return;

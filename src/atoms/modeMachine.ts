@@ -14,7 +14,6 @@ type ModeContext = {
 };
 
 type ModeEvent =
-  | { type: "SELECT_PAN_MODE" }
   | { type: "SELECT_MOVE_MODE" }
   | { type: "SELECT_DRAW_MODE" }
   | { type: "SELECT_ERASE_MODE" }
@@ -66,14 +65,6 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
       selectedShapeAtoms: new Set(),
     },
     states: {
-      pan: {
-        on: {
-          PRESS_SHAPE: {
-            target: "afterPressingShape",
-            actions: ["toggleSelection"],
-          },
-        },
-      },
       move: {
         on: {
           PRESS_SHAPE: {
@@ -105,7 +96,6 @@ const modeMachine = createMachine<ModeContext, ModeEvent>(
       },
     },
     on: {
-      SELECT_PAN_MODE: { target: "pan" },
       SELECT_MOVE_MODE: { target: "move" },
       SELECT_DRAW_MODE: { target: "draw", actions: ["clearSelection"] },
       SELECT_ERASE_MODE: { target: "erase", actions: ["clearSelection"] },
@@ -143,8 +133,7 @@ export const sendAtom = atom(null, (_get, set, event: ModeEvent) =>
 );
 
 export const modeAtom = atom(
-  (get) =>
-    get(modeMachineAtom).value as "pan" | "move" | "draw" | "erase" | "color"
+  (get) => get(modeMachineAtom).value as "move" | "draw" | "erase" | "color"
 );
 
 export const selectedAtom = atom(
