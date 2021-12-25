@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 
 import { sendAtom, modeAtom, selectedAtom } from "./modeMachine";
-import { offsetAtom, zoomAtom } from "./canvas";
+import { zoomAtom } from "./canvas";
 import { addDotAtom, commitDotsAtom } from "./dots";
 import { saveHistoryAtom } from "./history";
 
@@ -10,7 +10,7 @@ type ShapeMap = Map<object, { x: number; y: number }>;
 const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
-  dragged?: boolean;
+  moveCount?: number;
   erased?: boolean;
   startPos?: readonly [number, number];
 } | null>(null);
@@ -54,7 +54,6 @@ export const dragCanvasAtom = atom(
       return;
     }
 
-    const offset = get(offsetAtom);
     const zoom = get(zoomAtom);
     const selected = get(selectedAtom);
 
@@ -85,38 +84,16 @@ export const dragCanvasAtom = atom(
         });
         set(dragCanvasStartAtom, {
           ...dragStart,
-          dragged: true,
+          moveCount: (dragStart.moveCount || 0) + 1,
         });
       } else if (action.type === "end" && dragStart) {
-        if (dragStart.dragged) {
+        const dragged = (dragStart.moveCount || 0) > 1;
+        if (dragged) {
           set(saveHistoryAtom, null);
         }
-        if (!dragStart.dragged && dragStart.shapeMap?.size === selected.size) {
+        if (!dragged && dragStart.shapeMap?.size === selected.size) {
           set(sendAtom, { type: "CLEAR_SELECTION" });
         }
-        set(dragCanvasStartAtom, null);
-      }
-      return;
-    }
-
-    // pan mode
-    if (mode === "pan") {
-      if (action.type === "start" && !dragStart) {
-        set(dragCanvasStartAtom, {
-          canvas: {
-            x: offset.x + action.pos[0] / zoom,
-            y: offset.y + action.pos[1] / zoom,
-          },
-        });
-      } else if (action.type === "move" && dragStart) {
-        const { canvas } = dragStart;
-        if (canvas) {
-          set(offsetAtom, {
-            x: canvas.x - action.pos[0] / zoom,
-            y: canvas.y - action.pos[1] / zoom,
-          });
-        }
-      } else if (action.type === "end" && dragStart) {
         set(dragCanvasStartAtom, null);
       }
       return;
