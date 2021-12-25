@@ -1,9 +1,10 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useRef } from "react";
 import Svg, { Rect, G } from "react-native-svg";
 import { useAtom } from "jotai";
 
 import { dimensionAtom, offsetAtom, zoomAtom } from "../atoms/canvas";
 import { dragCanvasAtom } from "../atoms/drag";
+import { pinchCanvasAtom } from "../atoms/pinch";
 import Shapes from "./Shapes";
 import Dots from "./Dots";
 import Toolbar from "./Toolbar";
@@ -40,29 +41,59 @@ export const Canvas = ({
   const [offset] = useAtom(offsetAtom);
   const [zoom] = useAtom(zoomAtom);
   const [, drag] = useAtom(dragCanvasAtom);
+  const [, pinch] = useAtom(pinchCanvasAtom);
+
+  const touchesRef = useRef<any[]>([]);
+  const handleTouches = (e: any) => {
+    const { touches } = e.nativeEvent;
+    const lastTouches = touchesRef.current;
+    touchesRef.current = touches;
+    if (lastTouches.length === 2) {
+      if (touches.length === 2) {
+        pinch({
+          type: "move",
+          pos1: [touches[0].locationX, touches[0].locationY],
+          pos2: [touches[1].locationX, touches[1].locationY],
+        });
+        return;
+      }
+      pinch({ type: "end" });
+    }
+    if (lastTouches.length === 1) {
+      if (touches.length === 1) {
+        drag({
+          type: "move",
+          pos: [touches[0].locationX, touches[0].locationY],
+        });
+        return;
+      }
+      drag({ type: "end" });
+    }
+    if (touches.length === 2) {
+      pinch({
+        type: "start",
+        pos1: [touches[0].locationX, touches[0].locationY],
+        pos2: [touches[1].locationX, touches[1].locationY],
+      });
+      return;
+    }
+    if (touches.length === 1) {
+      drag({
+        type: "start",
+        pos: [touches[0].locationX, touches[0].locationY],
+      });
+      return;
+    }
+  };
 
   return (
     <Svg viewBox={`${offset.x} ${offset.y} ${width / zoom} ${height / zoom}`}>
       <G
         onStartShouldSetResponder={() => true}
         onMoveShouldSetResponderCapture={() => true}
-        onResponderGrant={(e) => {
-          const { locationX, locationY } = e.nativeEvent;
-          drag({
-            type: "start",
-            pos: [locationX, locationY],
-          });
-        }}
-        onResponderMove={(e) => {
-          const { locationX, locationY } = e.nativeEvent;
-          drag({
-            type: "move",
-            pos: [locationX, locationY],
-          });
-        }}
-        onResponderEnd={() => {
-          drag({ type: "end" });
-        }}
+        onResponderGrant={handleTouches}
+        onResponderMove={handleTouches}
+        onResponderEnd={handleTouches}
         ref={hackTouchableNode}
       >
         <Rect
