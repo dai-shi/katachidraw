@@ -5,14 +5,6 @@ export const hackTouchableNode = (instance: any) => {
   const props = instance?.props;
   if (node && props) {
     const emulateResponder = props.onStartShouldSetResponder?.();
-    let down = "mousedown";
-    let move = "mousemove";
-    let up = "mouseup";
-    if ("ontouchstart" in node) {
-      down = "touchstart";
-      move = "touchmove";
-      up = "touchend";
-    }
     const onDown = (e: any) => {
       if (emulateResponder) {
         props.onResponderGrant?.(hackEvent(e));
@@ -26,9 +18,9 @@ export const hackTouchableNode = (instance: any) => {
       }
       node._moveCount += 1;
     };
-    const onUp = () => {
+    const onUp = (e: any) => {
       if (emulateResponder) {
-        props.onResponderEnd?.();
+        props.onResponderEnd?.(hackEvent(e));
       }
       props.onPressOut?.();
       if (node._moveCount <= 1) {
@@ -37,12 +29,12 @@ export const hackTouchableNode = (instance: any) => {
       }
       node._moveCount = 0;
     };
-    node.removeEventListener(down, node._previousDownHandler);
-    node.removeEventListener(move, node._previousMoveHandler);
-    node.removeEventListener(up, node._previousUpHandler);
-    node.addEventListener(down, onDown);
-    node.addEventListener(move, onMove);
-    node.addEventListener(up, onUp);
+    node.removeEventListener("pointerdown", node._previousDownHandler);
+    node.removeEventListener("pointermove", node._previousMoveHandler);
+    node.removeEventListener("pointerup", node._previousUpHandler);
+    node.addEventListener("pointerdown", onDown);
+    node.addEventListener("pointermove", onMove);
+    node.addEventListener("pointerup", onUp);
     node._previousDownHandler = onDown;
     node._previousMoveHandler = onMove;
     node._previousUpHandler = onUp;

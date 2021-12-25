@@ -10,7 +10,7 @@ type ShapeMap = Map<object, { x: number; y: number }>;
 const dragCanvasStartAtom = atom<{
   canvas?: { x: number; y: number };
   shapeMap?: ShapeMap;
-  dragged?: boolean;
+  moveCount?: number;
   erased?: boolean;
   startPos?: readonly [number, number];
 } | null>(null);
@@ -85,13 +85,14 @@ export const dragCanvasAtom = atom(
         });
         set(dragCanvasStartAtom, {
           ...dragStart,
-          dragged: true,
+          moveCount: (dragStart.moveCount || 0) + 1,
         });
       } else if (action.type === "end" && dragStart) {
-        if (dragStart.dragged) {
+        const dragged = (dragStart.moveCount || 0) > 1;
+        if (dragged) {
           set(saveHistoryAtom, null);
         }
-        if (!dragStart.dragged && dragStart.shapeMap?.size === selected.size) {
+        if (!dragged && dragStart.shapeMap?.size === selected.size) {
           set(sendAtom, { type: "CLEAR_SELECTION" });
         }
         set(dragCanvasStartAtom, null);
