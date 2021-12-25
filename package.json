@@ -1,7 +1,7 @@
 {
   "name": "katachidraw",
   "description": "SVG based drawing tool and react-native component",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Daishi Kato",
   "repository": {
     "type": "git",
