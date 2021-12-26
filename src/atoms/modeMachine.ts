@@ -5,9 +5,11 @@ import { inspect } from "@xstate/inspect";
 
 import { ShapeAtom } from "./shapes";
 
-try {
-  inspect({ iframe: false });
-} catch {}
+if (process.env.NODE_ENV !== "production") {
+  try {
+    inspect({ iframe: false });
+  } catch {}
+}
 
 type ModeContext = {
   selectedShapeAtoms: Set<ShapeAtom>;
