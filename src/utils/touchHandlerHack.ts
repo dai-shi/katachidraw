@@ -45,7 +45,9 @@ export const hackTouchableNode = (instance: any) => {
       const { deltaX, deltaY } = e;
       if (e.metaKey || e.ctrlKey) {
         if (emulateResponder && props.onResponderMove) {
-          scaleEvents(deltaY).forEach(props.onResponderMove);
+          scaleEvents(e.clientX, e.clientY, deltaY).forEach(
+            props.onResponderMove
+          );
         }
       } else {
         if (emulateResponder && props.onResponderMove) {
@@ -87,29 +89,27 @@ const hackEvent = (e: any) => {
   };
 };
 
-const scaleEvents = (scale: number) => {
+const scaleEvents = (centerX: number, centerY: number, scale: number) => {
   const BASE = 70;
-  const locationX = window.innerWidth / 2;
-  const locationY = window.innerHeight / 2;
   const touchesArray = [
     [
       {
-        locationX,
-        locationY: locationY - BASE,
+        locationX: centerX,
+        locationY: centerY - BASE,
       },
       {
-        locationX,
-        locationY: locationY + BASE,
+        locationX: centerX,
+        locationY: centerY + BASE,
       },
     ],
     [
       {
-        locationX,
-        locationY: locationY - BASE + scale,
+        locationX: centerX,
+        locationY: centerY - BASE + scale,
       },
       {
-        locationX,
-        locationY: locationY + BASE - scale,
+        locationX: centerX,
+        locationY: centerY + BASE - scale,
       },
     ],
     [],
@@ -124,28 +124,26 @@ const scaleEvents = (scale: number) => {
 };
 
 const scrollEvents = (x: number, y: number) => {
-  const BASE = 50;
-  const locationX = window.innerWidth / 2;
-  const locationY = window.innerHeight / 2;
+  const BASE = 100;
   const touchesArray = [
     [
       {
-        locationX: locationX - BASE,
-        locationY: locationY - BASE,
+        locationX: 0,
+        locationY: 0,
       },
       {
-        locationX: locationX + BASE,
-        locationY: locationY + BASE,
+        locationX: BASE,
+        locationY: BASE,
       },
     ],
     [
       {
-        locationX: locationX - BASE - x,
-        locationY: locationY - BASE - y,
+        locationX: -x,
+        locationY: -y,
       },
       {
-        locationX: locationX + BASE - x,
-        locationY: locationY + BASE - y,
+        locationX: BASE - x,
+        locationY: BASE - y,
       },
     ],
     [],
