@@ -39,10 +39,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jotai": "1.4.4",
+    "jotai": "^1.4.4",
     "perfect-freehand": "^1.0.16",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "react-native-svg": "^12.1.1",
     "react-native-web": "^0.17.5",
     "svg-path-bbox": "^1.0.1",
@@ -71,11 +69,15 @@
     "expo-sharing": "^10.1.0",
     "expo-status-bar": "^1.2.0",
     "prettier": "^2.5.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-native": "0.64.3",
     "react-scripts": "^5.0.0",
     "typescript": "^4.5.4"
   },
   "peerDependencies": {
+    "react": "*",
+    "react-dom": "*",
     "expo-file-system": "*",
     "expo-image-picker": "*",
     "expo-sharing": "*",
