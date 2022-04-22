@@ -39,7 +39,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jotai": "1.4.4",
+    "jotai": "^1.4.4",
     "perfect-freehand": "^1.0.16",
     "react-native-svg": "^12.1.1",
     "react-native-web": "^0.17.5",
