@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.4.1] - 2022-04-22
+### Changed
+- chore: move react to peer dependencies #35
+
 ## [0.4.0] - 2021-12-25
 ### Changed
 - Combined draw and move modes
