@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from "jotai/vanilla";
 
 import { selectedAtom } from "./modeMachine";
 import { colorAtom } from "./shapes";

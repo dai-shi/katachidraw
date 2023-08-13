@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Circle } from "react-native-svg";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import { dotsAtom } from "../atoms/dots";
 

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import { selectedAtom } from "../atoms/modeMachine";
 import { allShapesAtom } from "../atoms/shapes";

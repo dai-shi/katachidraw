@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from "jotai/vanilla";
 
 export const dimensionAtom = atom({ width: 0, height: 0 });
 

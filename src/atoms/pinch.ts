@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from "jotai/vanilla";
 
 import { offsetAtom, zoomAtom } from "./canvas";
 

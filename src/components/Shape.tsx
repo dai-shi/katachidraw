@@ -1,7 +1,8 @@
 import { memo, useMemo } from "react";
 import { Platform } from "react-native";
 import { G, Path, Image, Rect } from "react-native-svg";
-import { atom, useAtom } from "jotai";
+import { atom } from "jotai/vanilla";
+import { useAtom } from "jotai/react";
 
 import { sendAtom, selectedAtom } from "../atoms/modeMachine";
 import {

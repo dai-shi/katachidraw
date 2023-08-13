@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from "jotai/vanilla";
 
 import { sendAtom, modeAtom, selectedAtom } from "./modeMachine";
 import { zoomAtom } from "./canvas";
@@ -49,7 +49,7 @@ export const dragCanvasAtom = atom(
         set(addDotAtom, action.pos);
       } else if (action.type === "end") {
         set(dragCanvasStartAtom, null);
-        set(commitDotsAtom, null);
+        set(commitDotsAtom);
       }
       return;
     }
