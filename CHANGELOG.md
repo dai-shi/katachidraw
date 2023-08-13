@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+
+## [0.5.0] - 2023-08-13
 ### Changed
 - update Jotai v2 #36
 
