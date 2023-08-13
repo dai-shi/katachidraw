@@ -4,7 +4,7 @@ SVG based drawing tool and react-native component
 
 Katachidraw means like "Let's make shapes" in Japanese.
 
-[![CI](https://img.shields.io/github/workflow/status/dai-shi/katachidraw/CI)](https://github.com/dai-shi/katachidraw/actions?query=workflow%3ACI)
+[![CI](https://img.shields.io/github/actions/workflow/status/dai-shi/katachidraw/ci.yml?branch=main)](https://github.com/dai-shi/katachidraw/actions?query=workflow%3ACI)
 [![npm](https://img.shields.io/npm/v/katachidraw)](https://www.npmjs.com/package/katachidraw)
 [![size](https://img.shields.io/bundlephobia/minzip/katachidraw)](https://bundlephobia.com/result?p=katachidraw)
 [![discord](https://img.shields.io/discord/627656437971288081)](https://discord.gg/MrQdmzd)
