@@ -1,6 +1,6 @@
 import { ReactElement, memo } from "react";
 import { G, Rect } from "react-native-svg";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import { toolbarAtom } from "../atoms/toolbar";
 import ColorPicker from "../components/ColorPicker";

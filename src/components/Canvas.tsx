@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useRef } from "react";
 import Svg, { Rect, G } from "react-native-svg";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import { dimensionAtom, offsetAtom, zoomAtom } from "../atoms/canvas";
 import { dragCanvasAtom } from "../atoms/drag";

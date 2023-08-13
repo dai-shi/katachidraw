@@ -1,5 +1,5 @@
-import { atom } from "jotai";
-import type { Getter, Setter } from "jotai";
+import { atom } from "jotai/vanilla";
+import type { Getter, Setter } from "jotai/vanilla";
 
 import { sendAtom } from "./modeMachine";
 import type { TShape } from "./shapes";

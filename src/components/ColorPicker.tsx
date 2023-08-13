@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Rect } from "react-native-svg";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import { modeAtom } from "../atoms/modeMachine";
 import { setColorAtom } from "../atoms/colorPicker";

@@ -1,5 +1,5 @@
-import { atom } from "jotai";
-import { atomWithMachine } from "jotai/xstate";
+import { atom } from "jotai/vanilla";
+import { atomWithMachine } from "jotai-xstate";
 import { createMachine, assign } from "xstate";
 import { inspect } from "@xstate/inspect";
 

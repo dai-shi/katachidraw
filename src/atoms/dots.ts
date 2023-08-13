@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from "jotai/vanilla";
 import { getFreehandPath } from "../utils/svgpath";
 
 import { offsetAtom, zoomAtom } from "./canvas";

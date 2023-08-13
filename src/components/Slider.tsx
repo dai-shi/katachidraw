@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Rect, Circle, Path, G } from "react-native-svg";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
 
 import {
   historyPositionAtom,

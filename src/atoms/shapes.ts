@@ -1,4 +1,5 @@
-import { atom, PrimitiveAtom } from "jotai";
+import { atom } from "jotai/vanilla";
+import type { PrimitiveAtom } from "jotai/vanilla";
 
 import { sendAtom, modeAtom } from "./modeMachine";
 import { adjustSvgPath } from "../utils/svgpath";
